@@ -8,7 +8,7 @@ export class Value<T> {
 
     constructor(private _value: T) { }
 
-    public get value(): T {
+    public get(): T {
         return this._value;
     }
 
