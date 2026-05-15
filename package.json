@@ -1,0 +1,36 @@
+{
+    "name": "starter",
+    "version": "1.0.8",
+    "description": "ZPE Starter Kit",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --config webpack.config.js --env production",
+        "build:emu": "webpack --config webpack.config.js --env production --env emulator",
+        "deploy": "webpack --config webpack.config.js --env production --env deploy",
+        "deploy:beta": "webpack --config webpack.config.js --env production --env beta",
+        "dev": "webpack serve --config webpack.config.js --env development",
+        "check": "echo \"Error: no check specified\" && exit 1",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/jest": "^30.0.0",
+        "@types/node": "^24.10.0",
+        "copy-webpack-plugin": "^13.0.1",
+        "cross-env": "^10.1.0",
+        "css-loader": "^7.1.2",
+        "file-loader": "^6.2.0",
+        "html-loader": "^5.1.0",
+        "html-webpack-plugin": "^5.6.4",
+        "jest": "^30.2.0",
+        "raw-loader": "^4.0.2",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.5.4",
+        "url-loader": "^4.1.1",
+        "webpack": "^5.102.1",
+        "webpack-cli": "^6.0.1",
+        "webpack-dev-server": "^5.2.2",
+        "webpack-merge": "^6.0.1"
+    }
+}

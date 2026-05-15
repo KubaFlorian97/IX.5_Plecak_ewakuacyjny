@@ -1,0 +1,3 @@
+[submodule "packages/zpe-port"]
+	path = packages/zpe-port
+	url = https://github.com/zpe-projekty/zpe-port.git
