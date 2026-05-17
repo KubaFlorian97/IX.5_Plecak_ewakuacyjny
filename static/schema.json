@@ -1,0 +1,64 @@
+{
+    "types": {
+
+    },
+    "properties": {
+        "difficulties": {
+            "type": "array",
+            "item": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "private": true
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "label": "Włączony"
+                    }
+                }
+            }
+        },
+        "threats": {
+            "type": "array",
+            "item": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "private": true
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "label": "Włączony"
+                    }
+                }
+            }
+        },
+        "rooms": {
+            "type": "array",
+            "item": {
+                "id": {
+                    "type": "string",
+                    "private": true
+                },
+                "items": {
+                    "type": "array",
+                    "item": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "private": true
+                            },
+                            "enabled": {
+                                "type": "boolean",
+                                "label": "Włączony"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

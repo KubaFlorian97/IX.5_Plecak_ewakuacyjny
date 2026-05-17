@@ -1,0 +1,37 @@
+{
+    "entry": "entry.js",
+    "stateful": true,
+    "useWebGL": false,
+    "editor": {
+        "entry": "editor.js",
+        "defaultData": {
+            "difficulties": [
+                { "id": "easy", "enabled": true },
+                { "id": "hard", "enabled": true },
+                { "id": "extreme", "enabled": true },
+                { "id": "hardcore", "enabled": true }
+            ],
+            "threats": [
+                { "id": "fire", "enabled": true },
+                { "id": "flood", "enabled": true },
+                { "id": "contamination", "enabled": true },
+                { "id": "uxo", "enabled": true }
+            ]
+        },
+        "demoData": {
+            "difficulties": [
+                { "id": "easy", "enabled": true },
+                { "id": "hard", "enabled": true },
+                { "id": "extreme", "enabled": true },
+                { "id": "hardcore", "enabled": true }
+            ],
+            "threats": [
+                { "id": "fire", "enabled": true },
+                { "id": "flood", "enabled": true },
+                { "id": "contamination", "enabled": true },
+                { "id": "uxo", "enabled": true }
+            ]
+        },
+        "editorIcon": "editor-icon.svg"
+    }
+}

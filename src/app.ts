@@ -1,5 +1,5 @@
 import { getData, loadCss, path } from "@/zpe-port";
-import * as style from "./styles/main.css";
+import * as styles from "./styles/main.css";
 import { state } from "./state";
 import { Scenario } from "./types/types";
 import { dom } from "./nano_core/dom";
@@ -15,7 +15,7 @@ export function init(container: HTMLElement): Promise<void> {
 
         // Wrapper init
         _gameWrapper = dom('div', {
-            className: "game-wrapper",
+            className: styles["game-wrapper"],
             role: "application",
             "aria-label": "Gra Plecak Ewakuacyjny"
         });

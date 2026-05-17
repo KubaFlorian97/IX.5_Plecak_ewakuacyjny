@@ -1,0 +1,310 @@
+{
+    "startRoomId": "living_room",
+    "characterPath": "",
+    "difficulties": [
+        { "id": "easy", "name": "difficulty.easy", "timeLimit": 30, "hintsEnabled": true, "darknessEnabled": false, "flashlightRadius": 0 },
+        { "id": "hard", "name": "difficulty.hard", "timeLimit": 15, "hintsEnabled": false, "darknessEnabled": false, "flashlightRadius": 0 },
+        { "id": "extreme", "name": "difficulty.extreme", "timeLimit": 5, "hintsEnabled": false, "darknessEnabled": true, "flashlightRadius": 200 },
+        { "id": "hardcore", "name": "difficulty.hardcore", "timeLimit": 3, "hintsEnabled": false, "darknessEnabled": true, "flashlightRadius": 150 }
+    ],
+    "threats": [
+        {
+            "id": "fire",
+            "name": "threats.fire.name",
+            "description": "threats.fire.desc",
+            "alertMessage": "threats.fire.alert",
+            "icon": "🔥",
+            "briefingAudio": "audio/descriptions/fire_desc.mp3",
+            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+        },
+        {
+            "id": "flood",
+            "name": "threats.flood.name",
+            "description": "threats.flood.desc",
+            "alertMessage": "threats.flood.alert",
+            "icon": "🌊",
+            "briefingAudio": "audio/descriptions/flood_desc.mp3",
+            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+        },
+        {
+            "id": "contamination",
+            "name": "threats.contamination.name",
+            "description": "threats.contamination.desc",
+            "alertMessage": "threats.contamination.alert",
+            "icon": "☣️",
+            "briefingAudio": "audio/descriptions/contamination_desc.mp3",
+            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+        },
+        {
+            "id": "uxo",
+            "name": "threats.uxo.name",
+            "description": "threats.uxo.desc",
+            "alertMessage": "threats.uxo.alert",
+            "icon": "💣",
+            "briefingAudio": "audio/descriptions/uxo_desc.mp3",
+            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+        }
+    ],
+    "rooms": [
+        {
+            "id": "living_room",
+            "name": "Salon",
+            "background": "images/rooms/living_room.webp",
+            "darknessLevel": 0.45,
+            "spawnPoints": [
+                { "x": 215, "y": 280 },
+                { "x": 900, "y": 630 },
+                { "x": 945, "y": 460 },
+                { "x": 925, "y": 370 }
+            ],
+            "items": [
+                {
+                    "id": "docs",
+                    "imagePath": "images/items/docs.webp",
+                    "scale": 0.5,
+                    "name": "Dokumenty",
+                    "description": "Zestaw najważniejszych dokumentów spakowanych w jedną teczkę.",
+                    "feedback": "Dobry wybór! Dokumenty przydadzą się podczas ewakuacji."
+                },
+                {
+                    "id": "batteries",
+                    "imagePath": "images/items/batteries.webp",
+                    "scale": 0.7,
+                    "name": "Baterie",
+                    "description": "Baterie litowo-jonowe niezbędne do zasilania urządzeń elektronicznych.",
+                    "feedback": "Świetny wybór! Przydadzą się np. do latarki!"
+                },
+                {
+                    "id": "flashlight",
+                    "imagePath": "images/items/flashlight.webp",
+                    "name": "Latarka",
+                    "description": "Kompaktowa latarka zasilana bateriami.",
+                    "feedback": "Dobra robota! Latarka jest bardzo użyteczna w ciemnych pomieszczeniach.",
+                    "scale": 0.7
+                },
+                {
+                    "id": "map",
+                    "imagePath": "images/items/map.webp",
+                    "scale": 0.7,
+                    "name": "Mapa",
+                    "description": "Mapa lokalna. Ułatwia nawigowanie po okolicy.",
+                    "feedback": "Świetnie! Teraz już się nie zgubisz!"
+                },
+                {
+                    "id": "pendrive",
+                    "imagePath": "images/items/pendrive.webp",
+                    "scale": 0.7,
+                    "name": "Pendrive z dokumentami",
+                    "description": "Pendrive z cyfrowymi wersjami dokumentów.",
+                    "feedback": "Świetnie! Kopia zapasowa dokumentów zawsze się przyda."
+                },
+                {
+                    "id": "radio",
+                    "imagePath": "images/items/radio.webp",
+                    "scale": 0.6,
+                    "name": "Radio",
+                    "description": "Przenośne radio na baterie.",
+                    "feedback": "Dobry wybór!"
+                },
+                {
+                    "id": "lv_drawer",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/living_room_drawer.webp",
+                    "x": 560,
+                    "y": 400,
+                    "width": 150,
+                    "height": 120,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(0% 31%, 24% 51%, 50% 34%, 50% 0%)",
+                    "openHitbox": "polygon(-22% 33%, 50% 100%, 120% 50%, 50% 0%)",
+                    "contents": ["docs", "flashlight", "batteries", "pendrive"],
+                    "spawnPoints": [
+                        { "x": 60, "y": 50, "scale": 0.8 }
+                    ]
+                },
+                {
+                    "id": "lv_cabinet1",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/living_room_cabinet1.webp",
+                    "x": 800,
+                    "y": 480,
+                    "width": 200,
+                    "height": 170,
+                    "name": "Szafka",
+                    "hitbox": "polygon(22% 5%, 21% 69%, 48% 82%, 83% 72%, 83% 38%)",
+                    "openHitbox": "polygon(22% 5%, 0% 18%, 0% 86%, 21% 72%, 48% 82%, 83% 72%, 83% 38%)",
+                    "contents": ["flashlight", "map", "pendrive"],
+                    "spawnPoints": [
+                        { "x": 100, "y": 60, "scale": 0.8 }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "kitchen",
+            "name": "Kuchnia",
+            "background": "images/rooms/kitchen.webp",
+            "darknessLevel": 0.95,
+            "spawnPoints": [
+                { "x": 530, "y": 270 },
+                { "x": 830, "y": 370 },
+                { "x": 600, "y": 240 },
+                { "x": 610, "y": 550 }
+            ],
+            "items": [
+                {
+                    "id": "water",
+                    "imagePath": "images/items/water.webp",
+                    "scale": 0.7,
+                    "name": "Butelka filtrująca",
+                    "description": "Butelka z filtrem oczyszczającym wodę, aby nadawała się do picia.",
+                    "feedback": "Bez czystej wody było by ciężko... Świetny wybór!"
+                },
+                {
+                    "id": "food",
+                    "imagePath": "images/items/food.webp",
+                    "scale": 0.7,
+                    "name": "Jedzenie",
+                    "description": "Zapas jedzenia na dwa dni.",
+                    "feedback": "Dobrze! Może się przydać jak nie będzie dostępu do pożywienia."
+                },
+                {
+                    "id": "dishes",
+                    "imagePath": "images/items/dishes.webp",
+                    "scale": 0.8,
+                    "name": "Naczynia",
+                    "description": "Zestaw talerzy i kubków. Są dosyć ciężkie i łatwo je uszkodzić.",
+                    "feedback": "Zły wybór... Wystarczy jeden metalowy kubek i miska."
+                },
+                {
+                    "id": "can_opener",
+                    "imagePath": "images/items/can_opener.webp",
+                    "scale": 0.7,
+                    "name": "Otwieracz do puszek",
+                    "description": "Mały otwieracz do puszek. Możesz nim z łatwością otworzyć konserwy lub puszki z jedzeniem.",
+                    "feedback": "Świetnie! Bez niego by było dosyć ciężko."
+                },
+                {
+                    "id": "matches",
+                    "imagePath": "images/items/matches.webp",
+                    "scale": 0.6,
+                    "name": "Zapałki",
+                    "description": "Pudełko zapałek. Przydadzą się do rozpalenia ogniska.",
+                    "feedback": "Dobra robota!"
+                },
+                {
+                    "id": "lighter",
+                    "imagePath": "images/items/lighter.webp",
+                    "scale": 0.7,
+                    "name": "Zapalniczka",
+                    "description": "Zapalniczka, którą możesz napełnić gazem.",
+                    "feedback": "Dobra robota!"
+                },
+                {
+                    "id": "spices",
+                    "imagePath": "images/items/spices.webp",
+                    "scale": 1.2,
+                    "name": "Przyprawy",
+                    "description": "Zestaw przypraw z całego świata.",
+                    "feedback": "To chyba nie jest niezbędne..."
+                },
+                {
+                    "id": "k_drawer",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/kitchen_drawer.webp",
+                    "x": 790,
+                    "y": 475,
+                    "width": 190,
+                    "height": 130,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(38% 4%, 37% 38%, 93% 76%, 93% 38%)",
+                    "openHitbox": "polygon(4% 18%, 3% 58%, 64% 97%, 93% 66%, 94% 41%, 42% 6%)",
+                    "contents": ["matches", "lighter", "can_opener"],
+                    "spawnPoints": [
+                        { "x": 80, "y": 40, "scale": 0.8 },
+                        { "x": 115, "y": 55, "scale": 0.8 }
+                    ]
+                },
+                {
+                    "id": "k_cabinet1",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/kitchen_cabinet1.webp",
+                    "x": 459,
+                    "y": 540,
+                    "width": 310,
+                    "height": 300,
+                    "name": "Szafka",
+                    "hitbox": "polygon(0% 35%, 0% 79%, 64% 48%, 64% 6%)",
+                    "openHitbox": "polygon(0 35%, 0% 79%, 24% 97%, 24% 67%, 85% 37%, 96% 43%, 96% 18%, 63% 6%)",
+                    "contents": ["dishes", "lighter", "food"],
+                    "spawnPoints": [
+                        { "x": 115, "y": 110, "scale": 0.8 },
+                        { "x": 100, "y": 155, "scale": 0.8 }
+                    ]
+                },
+                {
+                    "id": "k_cabinet2",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/kitchen_cabinet2.webp",
+                    "x": 206,
+                    "y": 610,
+                    "width": 196,
+                    "height": 280,
+                    "name": "Szafka",
+                    "hitbox": "polygon(35% 30%, 35% 78%, 100% 56%, 100% 10%)",
+                    "openHitbox": "polygon(35% 30%, 7% 53%, 7% 104%, 38% 78%, 100% 56%, 100% 10%)",
+                    "contents": ["dishes", "lighter", "food", "spices"],
+                    "spawnPoints": [
+                        { "x": 112, "y": 95, "scale": 0.75 },
+                        { "x": 110, "y": 155, "scale": 0.8 }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bedroom",
+            "name": "Sypialnia",
+            "background": "images/rooms/bedroom.webp",
+            "darknessLevel": 0.75,
+            "spawnPoints": [],
+            "items": []
+        },
+        {
+            "id": "bathroom",
+            "name": "Łazienka",
+            "background": "images/rooms/bathroom.webp",
+            "darknessLevel": 0.95,
+            "spawnPoints": [],
+            "items": []
+        },
+        {
+            "id": "wc",
+            "name": "Toaleta",
+            "background": "images/rooms/wc.webp",
+            "darknessLevel": 0.85,
+            "spawnPoints": [],
+            "items": []
+        },
+        {
+            "id": "bedroom_girl",
+            "name": "Sypialnia dziewczynki",
+            "background": "images/rooms/bedroom_girl.webp",
+            "darknessLevel": 0.75,
+            "spawnPoints": [],
+            "items": []
+        },
+        {
+            "id": "bedroom_teen",
+            "name": "Sypialnia nastolatka",
+            "background": "images/rooms/bedroom_teen.webp",
+            "darknessLevel": 0.85,
+            "spawnPoints": [],
+            "items": []
+        }
+    ]
+}
