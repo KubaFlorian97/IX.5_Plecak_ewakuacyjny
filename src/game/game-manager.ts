@@ -8,9 +8,15 @@ import * as ui from "./ui/ui.css";
 import { t } from "~/utils/localization";
 import { Modal } from "./ui/components/modal";
 import { createButton } from "./ui/components/button";
+import { TopBar } from "./ui/top-bar";
+import { soundManager } from "~/utils/sound-manager";
+import { createHelpModal } from "./ui/help-modal";
+import { SettingsModal } from "./ui/settings-modal";
 
 export class GameManager extends Disposable {
     private _currentView: any = null;
+    private _currentModal: any = null;
+    private _topBar: TopBar;
 
     constructor(
         private _container: HTMLElement,
@@ -19,10 +25,21 @@ export class GameManager extends Disposable {
     ) {
         super();
         log.info("GameManager zainicjalizowany.");
+
+        this._topBar = this._register(new TopBar(this._container, {
+            onSettings: () => this.showSettings(),
+            onHelp: () => this.showHelp(),
+            onSoundToggle: () => {
+                soundManager.toggleSfxMute();
+                soundManager.toggleMusicMute();
+            }
+        }));
     }
 
     public start() {
         const currentState = this._state.get();
+        soundManager.setupAutoplayUnlock();
+        this._topBar.render();
 
         if (currentState.collectedItems.length > 0 || currentState.threatId) {
             this.showResumePrompt();
@@ -91,6 +108,36 @@ export class GameManager extends Disposable {
             this._currentView.dispose();
             this._currentView = null;
         }
-        this._container.innerHTML = "";
+        this.clearModal();
+    }
+
+    // Modals
+    private showHelp() {
+        this.clearModal();
+        soundManager.play('click');
+
+        const helpModal = createHelpModal(() => this.clearModal());
+
+        this._container.appendChild(helpModal.element);
+        helpModal.render();
+        this._currentModal = helpModal;
+    }
+
+    private showSettings() {
+        this.clearModal();
+        soundManager.play('click');
+
+        const settingsModal = new SettingsModal(() => this.clearModal());
+
+        this._container.appendChild(settingsModal.element);
+        settingsModal.render();
+        this._currentModal = settingsModal;
+    }
+
+    private clearModal() {
+        if (this._currentModal) {
+            this._currentModal.dispose();
+            this._currentModal = null;
+        }
     }
 }

@@ -1,12 +1,11 @@
 .game-wrapper {
-    container-type: inline-size;
+    container-type: size;
     container-name: game;
 
     position: relative;
     width: 100%;
     height: auto;
-    max-height: 85vh;
-    max-height: 85dvh;
+    min-height: 50vh;
     aspect-ratio: 4 / 3 !important;
     overflow: hidden;
     background-color: var(--bg-app);
@@ -19,7 +18,7 @@
     box-sizing: border-box;
 }
 
-.game-wrapper * {
+.game-wrapper {
     --c-primary: #3B7AA3;
     --c-primary-dark: #356E93;
     --c-secondary: #f1c40f;
@@ -53,21 +52,21 @@
 
     /* --- TYPOGRAPHY --- */
     --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --base-size: calc(1.25cqi * var(--scale-factor));
-    --scale-factor: 1; /* Mnożnik dla Accessibility */
+    --base-size: calc(14px * var(--scale-factor));
+    --scale-factor: 1;
 
-    --fs-sm: calc(1.155cqi * var(--scale-factor));
-    --fs-md: calc(1.25cqi * var(--scale-factor));
-    --fs-lg: calc(1.5cqi * var(--scale-factor));
-    --fs-xl: calc(1.9cqi * var(--scale-factor));
-    --fs-xxl: calc(3.1cqi * var(--scale-factor));
+    --fs-sm: calc(0.9rem * var(--scale-factor));
+    --fs-md: calc(1rem * var(--scale-factor));
+    --fs-lg: calc(1.2rem * var(--scale-factor));
+    --fs-xl: calc(1.5rem * var(--scale-factor));
+    --fs-xxl: calc(2.5rem * var(--scale-factor));
 }
 
 .game-wrapper *,
 .game-wrapper *::before,
 .game-wrapper *::after {
     box-sizing: inherit;
-    font-family: var(--font-main);
+    font-family: var(--font-main) !important;
     margin: 0;
     padding: 0;
 }
@@ -87,7 +86,6 @@
 .game-wrapper select,
 .game-wrapper textarea {
     font-family: inherit;
-    font-size: inherit;
     line-height: inherit;
 }
 
@@ -114,14 +112,60 @@
     text-align: center;
     padding: 2rem;
     color: var(--c-light);
-    font-size: var(--fs-md);
 }
 
-@container game (max-aspect-ratio: 1/1) {
+.landscape-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: rotatePhone 2s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes rotatePhone {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+    100% { transform: rotate(-90deg); }
+}
+
+@container game (aspect-ratio < 1/1) and (max-width: 900px) {
     .game-wrapper .landscape-overlay {
-        display: flex;
+        display: flex !important;
     }
     .game-wrapper .game-layer {
         display: none !important;
     }
 }
+
+/* WCAG */
+.game-wrapper.text-size-150 * { --scale-factor: 1.5; }
+.game-wrapper.text-size-200 * { --scale-factor: 2; }
+
+.game-wrapper.high-contrast * {
+    --c-primary: #ffff00;
+    --c-primary-dark: #cccc00;
+    --c-secondary: #00ffff;
+    --c-success: #00ff00;
+    --c-danger: #ff0000;
+    --c-dark: #000000;
+    
+    --bg-app: #000000;
+    --bg-panel: #000000;
+    --bg-modal-overlay: rgba(0, 0, 0, 0.95);
+
+    --text-main: #ffffff;
+    --text-inverse: #000000;
+    --text-muted: #ffff00;
+
+    --shadow-soft: none;
+    --shadow-hard: 0 0 0 2px #ffffff; /* Obramowanie zamiast cienia */
+}
+
+.game-wrapper.reduce-motion *,
+.game-wrapper.reduce-motion *::before,
+.game-wrapper.reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+.game-wrapper.freeze-time {}

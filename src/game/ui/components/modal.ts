@@ -8,6 +8,7 @@ export interface ModalProps {
     description?: string;
     content?: HTMLElement | HTMLElement[];
     actions?: HTMLElement | HTMLElement[];
+    className?: string | string[];
 }
 
 export class Modal extends Component {
@@ -21,8 +22,10 @@ export class Modal extends Component {
             'aria-labelledby': 'modal-title'
         }));
 
-        const windowEl = dom('div', { className: ui['modal-window'] });
-        windowEl.appendChild(dom('h2', { id: 'modal-title' }, props.title));
+        const extraClasses = Array.isArray(props.className) ? props.className : [props.className];
+
+        const windowEl = dom('div', { className: [ ui['modal-window'], ...extraClasses ] });
+        windowEl.appendChild(dom('h2', { className: ui['modal-title'], id: 'modal-title' }, props.title));
         
         if (props.description) {
             windowEl.appendChild(dom('p', {}, props.description));

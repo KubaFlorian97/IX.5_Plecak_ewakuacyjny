@@ -6,7 +6,8 @@ export const translations = {
             help_btn: "Pomoc",
             settings_btn: "Ustawienia",
             fullscreen_btn: "Pełny ekran",
-            sound_mute_btn: "Przycisk wyciszenia dźwięków"
+            sound_mute_btn: "Przycisk wyciszenia dźwięków",
+            menu_btn: "Menu"
         },
         help: {
             title: "INSTRUKCJA",

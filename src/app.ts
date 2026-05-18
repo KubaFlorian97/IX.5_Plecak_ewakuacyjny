@@ -13,12 +13,19 @@ export function init(container: HTMLElement): Promise<void> {
     return new Promise((resolve) => {
         container.innerHTML = "";
 
+        const landscapeOverlay = dom('div', { className: styles['landscape-overlay'], 'aria-hidden': true },
+            dom('div', { className: styles['landscape-icon'] }, "📱"), 
+            dom('h2', { style: 'margin: 0 0 1rem 0; color: var(--c-secondary);' }, "Obróć urządzenie"),
+            dom('p', { style: 'margin: 0;' }, "Aby gra działała poprawnie, prosimy o obrócenie urządzenia do poziomu.")
+        );
+
         // Wrapper init
         _gameWrapper = dom('div', {
             className: styles["game-wrapper"],
             role: "application",
             "aria-label": "Gra Plecak Ewakuacyjny"
         });
+        _gameWrapper.appendChild(landscapeOverlay)
         container.appendChild(_gameWrapper);
 
         loadCss("entry.css").then(() => {
