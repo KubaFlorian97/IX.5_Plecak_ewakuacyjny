@@ -5,6 +5,7 @@ import { State } from "~/state";
 import { Scenario } from "~/types/types";
 import { IntroScreen } from "./ui/intro-screen";
 import * as ui from "./ui/ui.css";
+import { t } from "~/utils/localization";
 
 export class GameManager extends Disposable {
     private _currentView: any = null;
@@ -34,11 +35,11 @@ export class GameManager extends Disposable {
 
         const prompt = dom('div', { className: ui['modal-overlay'], role: 'dialog', 'aria-labelledby': "resume-title", 'aria-modal': true },
             dom('div', { className: ui['modal-window'] },
-                dom('h2', { id: ui['resume-title'] }, "Wykryto zapisany stan gry"),
-                dom('p', {}, "Czy chcesz kontynuować przerwaną rozgrywkę?"),
+                dom('h2', { id: ui['resume-title'] }, t('intro.resume_title')),
+                dom('p', {}, t('intro.resume_text')),
                 dom('div', { className: ui['modal-actions'] },
-                    dom('button', { className: [ ui['btn'], ui['btn-secondary'] ], 'aria-label': 'Nowa gra' }, "Nowa gra"),
-                    dom('button', { className: [ ui['btn'], ui['btn-primary'] ], 'aria-label': 'Kontynuuj' }, "Kontynuuj")
+                    dom('button', { className: [ ui['btn'], ui['btn-secondary'] ], 'aria-label': t('intro.btn_new') }, t('intro.btn_new')),
+                    dom('button', { className: [ ui['btn'], ui['btn-primary'] ], 'aria-label': t('intro.btn_resume') }, t('intro.btn_resume'))
                 )
             )
         );

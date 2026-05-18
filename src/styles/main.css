@@ -2,24 +2,65 @@
     container-type: inline-size;
     container-name: game;
 
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 85vh;
+    max-height: 85dvh;
+    aspect-ratio: 4 / 3 !important;
+    overflow: hidden;
+    background-color: var(--bg-app);
+    font-family: var(--font-main);
+    font-size: var(--base-size);
+    color: var(--text-inverse);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    isolation: isolate;
+    box-sizing: border-box;
+}
+
+.game-wrapper * {
     --c-primary: #3B7AA3;
     --c-primary-dark: #356E93;
     --c-secondary: #f1c40f;
     --c-success: #328555;
+    --c-success-dark: #2D784C;
+    --c-success-row: #00da4f;
     --c-danger: #D64535;
     --c-dark: #243447;
+    --c-dark-rgb: 36, 52, 71; /* Do rgba() */
     --c-light: #E8ECEE;
+    --c-light-rgb: 232, 236, 238;
+    --c-grey: #626D72;
+    --c-grey-dark: #586266;
     --c-white: #ffffff;
     --c-black: #000000;
 
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--c-dark);
-    color: var(--c-light);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden;
-    box-sizing: border-box;
+    --bg-app: var(--c-dark);
+    --bg-panel: #0F1E30;
+    --bg-modal-overlay: rgba(0, 0, 0, 0.85);
+
+    --text-main: var(--c-dark);
+    --text-inverse: var(--c-white);
+    --text-muted: var(--c-grey-dark);
+
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+
+    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.6);
+    --shadow-hard: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+    /* --- TYPOGRAPHY --- */
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --base-size: calc(1.25cqi * var(--scale-factor));
+    --scale-factor: 1; /* Mnożnik dla Accessibility */
+
+    --fs-sm: calc(1.155cqi * var(--scale-factor));
+    --fs-md: calc(1.25cqi * var(--scale-factor));
+    --fs-lg: calc(1.5cqi * var(--scale-factor));
+    --fs-xl: calc(1.9cqi * var(--scale-factor));
+    --fs-xxl: calc(3.1cqi * var(--scale-factor));
 }
 
 .game-wrapper *,

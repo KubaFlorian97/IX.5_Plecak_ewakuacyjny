@@ -3,6 +3,7 @@ import { dom } from "~/nano_core/dom";
 import { Scenario } from "~/types/types";
 import * as styles from "~/styles/main.css";
 import * as ui from "./ui.css";
+import { t } from "~/utils/localization";
 
 export class IntroScreen extends Component {
     private _step: 'threat' | 'difficulty' = 'threat';
@@ -25,8 +26,8 @@ export class IntroScreen extends Component {
     }
 
     private renderThreatSelection() {
-        const title = dom('h1', { className: styles['sr-only'] }, "Wybór zagrożenia");
-        const header = dom('h2', { className: ui['section-title'] }, "Wybierz zagrożenie");
+        const title = dom('h1', { className: styles['sr-only'] }, t('intro.step1'));
+        const header = dom('h2', { className: ui['section-title'] }, t('intro.step1'));
 
         const grid = dom('div', { className: ui['selection-grid'], role: 'radiogroup', 'aria-label': 'Lista zagrożeń'});
 
@@ -38,7 +39,7 @@ export class IntroScreen extends Component {
                 'aria-label': `${threat.name}. ${threat.description}`
             },
                 dom('span', { className: ui['card-icon'], 'aria-hidden': true }, threat.icon),
-                dom('span', { className: ui['card-name'] }, threat.name)
+                dom('span', { className: ui['card-name'] }, t(threat.name))
             );
 
             btn.onclick = () => {
@@ -54,14 +55,14 @@ export class IntroScreen extends Component {
     }
 
     private renderDifficultySelection() {
-        const title = dom('h1', { className: styles['sr-only'] }, "Wybór poziomu trudności");
-        const header = dom('h2', { className: ui['section-title'] }, "Wybierz poziom trudności");
+        const title = dom('h1', { className: styles['sr-only'] }, t('intro.step2'));
+        const header = dom('h2', { className: ui['section-title'] }, t('intro.step2'));
 
         const grid = dom('div', { className: ui['selection-grid'], role: 'radiogroup', 'aria-label': 'Lista poziomów trudności' });
 
         this._scenario.difficulties.forEach(diff => {
             const btn = dom('button', { className: ui['select-card'], role: 'radio', 'aria-checked': false },
-                dom('span', { className: ui['card-name'] }, diff.name),
+                dom('span', { className: ui['card-name'] }, t(diff.name)),
                 dom('span', { className: ui['card-desc'] }, `Czas na ewakuację: ${diff.timeLimit} min.`)
             );
 
