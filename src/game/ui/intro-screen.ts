@@ -63,7 +63,7 @@ export class IntroScreen extends Component {
         this._scenario.difficulties.forEach(diff => {
             const btn = dom('button', { className: ui['select-card'], role: 'radio', 'aria-checked': false },
                 dom('span', { className: ui['card-name'] }, t(diff.name)),
-                dom('span', { className: ui['card-desc'] }, `Czas na ewakuację: ${diff.timeLimit} min.`)
+                dom('span', { className: ui['card-desc'] }, `${diff.timeLimit} min.`)
             );
 
             btn.onclick = () => {

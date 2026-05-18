@@ -67,6 +67,9 @@
 .game-wrapper *::before,
 .game-wrapper *::after {
     box-sizing: inherit;
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
 }
 
 .game-wrapper *:focus:not(:focus-visible) {
@@ -77,6 +80,15 @@
     outline: 3px solid var(--c-secondary);
     outline-offset: 3px;
     border-radius: 4px;
+}
+
+.game-wrapper button,
+.game-wrapper input,
+.game-wrapper select,
+.game-wrapper textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .game-wrapper .sr-only {
@@ -102,7 +114,7 @@
     text-align: center;
     padding: 2rem;
     color: var(--c-light);
-    font-size: 1.2rem;
+    font-size: var(--fs-md);
 }
 
 @container game (max-aspect-ratio: 1/1) {
