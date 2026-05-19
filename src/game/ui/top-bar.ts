@@ -39,6 +39,8 @@ export class TopBar extends Component {
     public render() {
         this.element.innerHTML = "";
 
+        const gameTitle = dom('h1', { className: ui['top-bar-title'] }, t('intro.title'));
+
         // Hamburger
         const menuBtn = dom('button', {
             className: [ ui['icon-btn'], ui['menu-toggle-btn'] ],
@@ -91,7 +93,7 @@ export class TopBar extends Component {
         });
 
         this._menuContainer.append(this._fsBtn, this._soundBtn, helpBtn, settingsBtn);
-        this.element.append(menuBtn, this._menuContainer);
+        this.element.append(gameTitle, menuBtn, this._menuContainer);
     
         // Listeners
         this._register(addDisposableListener(_gameWrapper, 'fullscreenchange', () => this.updateFullscreenIcon()));

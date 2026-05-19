@@ -16,6 +16,8 @@
     -webkit-font-smoothing: antialiased;
     isolation: isolate;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .game-wrapper {
@@ -27,7 +29,7 @@
     --c-success-row: #00da4f;
     --c-danger: #D64535;
     --c-dark: #243447;
-    --c-dark-rgb: 36, 52, 71; /* Do rgba() */
+    --c-dark-rgb: 36, 52, 71;
     --c-light: #E8ECEE;
     --c-light-rgb: 232, 236, 238;
     --c-grey: #626D72;
@@ -67,6 +69,7 @@
 .game-wrapper *::after {
     box-sizing: inherit;
     font-family: var(--font-main) !important;
+    color: var(--c-light);
     margin: 0;
     padding: 0;
 }

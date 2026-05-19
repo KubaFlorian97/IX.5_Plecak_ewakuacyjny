@@ -12,6 +12,7 @@ import { TopBar } from "./ui/top-bar";
 import { soundManager } from "~/utils/sound-manager";
 import { createHelpModal } from "./ui/help-modal";
 import { SettingsModal } from "./ui/settings-modal";
+import { GameScene } from "./game-scene";
 
 export class GameManager extends Disposable {
     private _currentView: any = null;
@@ -92,7 +93,13 @@ export class GameManager extends Disposable {
     private resumeGame() {
         log.success("Wznawianie gry z zapisanego stanu...");
         this.clearView();
-        // TODO: GameScene
+        
+        this._currentView = this._register(new GameScene(
+            this._container,
+            this._state,
+            this._scenario
+        ));
+        this._currentView.render();
     }
 
     private startGame(difficultyId: string, threatId: string) {
@@ -100,7 +107,13 @@ export class GameManager extends Disposable {
         this._state.set({ threatId, difficultyId });
 
         this.clearView();
-        // TODO: GameScene
+        
+        this._currentView = this._register(new GameScene(
+            this._container,
+            this._state,
+            this._scenario
+        ));
+        this._currentView.render();
     }
 
     private clearView() {

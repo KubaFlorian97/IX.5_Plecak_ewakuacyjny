@@ -57,7 +57,8 @@
     justify-content: center;
     min-height: 100%;
     padding: 1rem;
-    background: radial-gradient(circle, var(--c-primary-dark) 0%, var(--c-dark) 100%);
+    background: var(--c-dark);
+    box-sizing: border-box;
 }
 
 .section-title {
@@ -200,6 +201,55 @@
 }
 
 /* Nav na mobilkach */
+.top-bar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Tytuł gry ukryty domyślnie na mobile (mobile-first) */
+.top-bar-title {
+    display: none;
+    margin: 0;
+    font-size: var(--fs-lg);
+    font-weight: bold;
+    color: var(--c-secondary); /* Charakterystyczny żółty kolor z oryginału */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Uniwersalne przyciski z ikonami */
+.icon-btn {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(36, 52, 71, 0.85); /* var(--c-dark) z przezroczystością */
+    border: 2px solid var(--c-primary);
+    border-radius: 8px;
+    background-size: 55%;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.icon-btn:hover, .icon-btn:focus-visible {
+    border-color: var(--c-secondary);
+    background-color: var(--c-primary-dark);
+    transform: scale(1.05);
+}
+
+/* Kontener nawigacji mobilnej (pionowy stos) */
 .top-bar-nav {
     display: flex;
     flex-direction: column;
@@ -211,11 +261,12 @@
 }
 
 .top-bar-nav.nav-open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
 }
 
+/* Ikona hamburgera rysowana czystym CSS */
 .menu-icon {
     display: block;
     width: 20px;
@@ -223,9 +274,7 @@
     background: var(--c-light);
     position: relative;
 }
-
-.menu-icon::before,
-.menu-icon::after {
+.menu-icon::before, .menu-icon::after {
     content: '';
     position: absolute;
     width: 20px;
@@ -233,23 +282,49 @@
     background: var(--c-light);
     left: 0;
 }
-.menu-icon::before {
-    top: -6px;
-}
-.menu-icon::after {
-    top: 6px;
-}
+.menu-icon::before { top: -6px; }
+.menu-icon::after { top: 6px; }
 
 @container game (min-width: 900px) {
+    .top-bar {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        width: 100% !important;
+        padding: 15px 20px !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background-color: rgba(36, 52, 71, 0.3);
+    }
+
+    .top-bar-title {
+        display: block !important;
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
     .menu-toggle-btn {
         display: none !important;
     }
-
+    
     .top-bar-nav {
-        flex-direction: row;
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0.5rem !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: translateY(0) !important;
+        margin-left: auto !important;
+    }
+
+    .intro-screen {
+        min-height: auto !important;
+        flex: 1 !important;
     }
 }
 

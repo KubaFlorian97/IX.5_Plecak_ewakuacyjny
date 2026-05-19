@@ -15,7 +15,9 @@
             "alertMessage": "threats.fire.alert",
             "icon": "🔥",
             "briefingAudio": "audio/descriptions/fire_desc.mp3",
-            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+            "requiredItems": [ "water", "filters", "gps", "medkit", "batteries", "flashlight", "crowbar", "map", "soap_bar", "knife", "pencil",
+                                "can_opener", "toilet_paper", "pendrive", "docs", "disinfection_gel", "food", "multitool", "trash_bag", "compas",
+                                "mask", "wallet", "radio", "sleeping_bag", "phone", "matches", "lighter", "clothes" ]
         },
         {
             "id": "flood",
@@ -24,7 +26,9 @@
             "alertMessage": "threats.flood.alert",
             "icon": "🌊",
             "briefingAudio": "audio/descriptions/flood_desc.mp3",
-            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+            "requiredItems": [ "water", "filters", "gps", "medkit", "batteries", "flashlight", "crowbar", "map", "soap_bar", "knife", "pencil",
+                                "can_opener", "toilet_paper", "pendrive", "docs", "disinfection_gel", "food", "multitool", "trash_bag", "compas",
+                                "mask", "wallet", "radio", "sleeping_bag", "phone", "matches", "lighter", "clothes" ]
         },
         {
             "id": "contamination",
@@ -33,7 +37,9 @@
             "alertMessage": "threats.contamination.alert",
             "icon": "☣️",
             "briefingAudio": "audio/descriptions/contamination_desc.mp3",
-            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+            "requiredItems": [ "water", "filters", "gps", "medkit", "batteries", "flashlight", "crowbar", "map", "soap_bar", "knife", "pencil",
+                                "can_opener", "toilet_paper", "pendrive", "docs", "disinfection_gel", "food", "multitool", "trash_bag", "compas",
+                                "mask", "wallet", "radio", "sleeping_bag", "phone", "matches", "lighter", "clothes" ]
         },
         {
             "id": "uxo",
@@ -42,7 +48,9 @@
             "alertMessage": "threats.uxo.alert",
             "icon": "💣",
             "briefingAudio": "audio/descriptions/uxo_desc.mp3",
-            "requiredItems": [ "batteries", "water", "docs", "food", "flashlight", "map", "can_opener", "pendrive", "radio", "lighter", "matches" ]
+            "requiredItems": [ "water", "filters", "gps", "medkit", "batteries", "flashlight", "crowbar", "map", "soap_bar", "knife", "pencil",
+                                "can_opener", "toilet_paper", "pendrive", "docs", "disinfection_gel", "food", "multitool", "trash_bag", "compas",
+                                "mask", "wallet", "radio", "sleeping_bag", "phone", "matches", "lighter", "clothes" ]
         }
     ],
     "rooms": [
@@ -63,6 +71,7 @@
                     "imagePath": "images/items/docs.webp",
                     "scale": 0.5,
                     "name": "Dokumenty",
+                    "hitbox": "polygon(0% 52%, 41% 89%, 98% 53%, 67% 11%)",
                     "description": "Zestaw najważniejszych dokumentów spakowanych w jedną teczkę.",
                     "feedback": "Dobry wybór! Dokumenty przydadzą się podczas ewakuacji."
                 },
@@ -71,13 +80,15 @@
                     "imagePath": "images/items/batteries.webp",
                     "scale": 0.7,
                     "name": "Baterie",
-                    "description": "Baterie litowo-jonowe niezbędne do zasilania urządzeń elektronicznych.",
+                    "hitbox": "polygon(30% 28%, 29% 86%, 71% 72%, 72% 22%)",
+                    "description": "Baterie litowo-jonowe niezbędne do zasilania urządzeń elektornicznych.",
                     "feedback": "Świetny wybór! Przydadzą się np. do latarki!"
                 },
                 {
                     "id": "flashlight",
                     "imagePath": "images/items/flashlight.webp",
                     "name": "Latarka",
+                    "hitbox": "polygon(10% 42%, 10% 95%, 95% 50%, 91% 20%)",
                     "description": "Kompaktowa latarka zasilana bateriami.",
                     "feedback": "Dobra robota! Latarka jest bardzo użyteczna w ciemnych pomieszczeniach.",
                     "scale": 0.7
@@ -87,7 +98,8 @@
                     "imagePath": "images/items/map.webp",
                     "scale": 0.7,
                     "name": "Mapa",
-                    "description": "Mapa lokalna. Ułatwia nawigowanie po okolicy.",
+                    "hitbox": "polygon(34% 10%, 1% 56%, 66% 87%, 94% 38%)",
+                    "description": "Papierowa mapa najbliższej okolicy uwzględniająca główne drogi, obiekty publiczne i punkty orientacyjne.",
                     "feedback": "Świetnie! Teraz już się nie zgubisz!"
                 },
                 {
@@ -95,6 +107,7 @@
                     "imagePath": "images/items/pendrive.webp",
                     "scale": 0.7,
                     "name": "Pendrive z dokumentami",
+                    "hitbox": "polygon(28% 11%, 28% 76%, 72% 77%, 72% 11%)",
                     "description": "Pendrive z cyfrowymi wersjami dokumentów.",
                     "feedback": "Świetnie! Kopia zapasowa dokumentów zawsze się przyda."
                 },
@@ -103,7 +116,8 @@
                     "imagePath": "images/items/radio.webp",
                     "scale": 0.6,
                     "name": "Radio",
-                    "description": "Przenośne radio na baterie.",
+                    "hitbox": "polygon(66% 0%, 0% 31%, 0% 100%, 100% 100%, 100% 0%)",
+                    "description": "Małe, przenośne radio zasilane bateriami, wyposażone w zapasowy komplet ogniw.",
                     "feedback": "Dobry wybór!"
                 },
                 {
@@ -118,9 +132,10 @@
                     "name": "Szuflada",
                     "hitbox": "polygon(0% 31%, 24% 51%, 50% 34%, 50% 0%)",
                     "openHitbox": "polygon(-22% 33%, 50% 100%, 120% 50%, 50% 0%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/lv_drawer_zoomed.webp",
                     "contents": ["docs", "flashlight", "batteries", "pendrive"],
                     "spawnPoints": [
-                        { "x": 60, "y": 50, "scale": 0.8 }
+                        { "x": 60, "y": 50, "scale": 0.8, "zx": 600, "zy": 500, "zscale": 2 }
                     ]
                 },
                 {
@@ -135,9 +150,26 @@
                     "name": "Szafka",
                     "hitbox": "polygon(22% 5%, 21% 69%, 48% 82%, 83% 72%, 83% 38%)",
                     "openHitbox": "polygon(22% 5%, 0% 18%, 0% 86%, 21% 72%, 48% 82%, 83% 72%, 83% 38%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/lv_cabinet.webp",
                     "contents": ["flashlight", "map", "pendrive"],
                     "spawnPoints": [
-                        { "x": 100, "y": 60, "scale": 0.8 }
+                        { "x": 100, "y": 60, "scale": 0.8, "zx": 650, "zy": 320, "zscale": 2 }
+                    ]
+                },
+                {
+                    "id": "movable_chair_lv",
+                    "type": "movable",
+                    "name": "Krzesło",
+                    "imagePath": "images/rooms/movable/living_room_chair.webp",
+                    "x": 1040,
+                    "y": 785,
+                    "width": 143,
+                    "height": 190,
+                    "hitbox": "polygon(0% 23%, 0% 78%, 6% 78%, 10% 41%, 43% 56%, 46% 100%, 56% 100%, 54% 52%, 83% 42%, 94% 88%, 100% 88%, 96% 35%, 100% 0%)",
+                    "moveOffset": { "x": 100, "y": 0 },
+                    "contents": ["pendrive", "flashlight", "map", "docs"],
+                    "spawnPoints": [
+                        { "x": 30, "y": 75, "scale": 1 }
                     ]
                 }
             ]
@@ -159,6 +191,7 @@
                     "imagePath": "images/items/water.webp",
                     "scale": 0.7,
                     "name": "Butelka filtrująca",
+                    "hitbox": "polygon(30% 5%, 30% 90%, 70% 90%, 75% 5%)",
                     "description": "Butelka z filtrem oczyszczającym wodę, aby nadawała się do picia.",
                     "feedback": "Bez czystej wody było by ciężko... Świetny wybór!"
                 },
@@ -167,7 +200,8 @@
                     "imagePath": "images/items/food.webp",
                     "scale": 0.7,
                     "name": "Jedzenie",
-                    "description": "Zapas jedzenia na dwa dni.",
+                    "hitbox": "polygon(8% 4%, 0% 85%, 85% 85%, 100% 20%)",
+                    "description": "Zapas jedzenia na dwa dni - produkty z długą datą przydatności, które nie wymagają przechowywania w warunkach chłodniczych.",
                     "feedback": "Dobrze! Może się przydać jak nie będzie dostępu do pożywienia."
                 },
                 {
@@ -175,6 +209,7 @@
                     "imagePath": "images/items/dishes.webp",
                     "scale": 0.8,
                     "name": "Naczynia",
+                    "hitbox": "polygon(20% 18%, 15% 88%, 85% 85%, 85% 17%)",
                     "description": "Zestaw talerzy i kubków. Są dosyć ciężkie i łatwo je uszkodzić.",
                     "feedback": "Zły wybór... Wystarczy jeden metalowy kubek i miska."
                 },
@@ -183,7 +218,8 @@
                     "imagePath": "images/items/can_opener.webp",
                     "scale": 0.7,
                     "name": "Otwieracz do puszek",
-                    "description": "Mały otwieracz do puszek. Możesz nim z łatwością otworzyć konserwy lub puszki z jedzeniem.",
+                    "hitbox": "polygon(10% 55%, 40% 80%, 90% 53%, 75% 13%)",
+                    "description": "Mały i lekki otwieracz do puszek i innych metalowych opakowań.",
                     "feedback": "Świetnie! Bez niego by było dosyć ciężko."
                 },
                 {
@@ -191,7 +227,8 @@
                     "imagePath": "images/items/matches.webp",
                     "scale": 0.6,
                     "name": "Zapałki",
-                    "description": "Pudełko zapałek. Przydadzą się do rozpalenia ogniska.",
+                    "hitbox": "polygon(36% 25%, 6% 52%, 70% 75%, 90% 40%)",
+                    "description": "Pudełko zapałek zabezpieczonych przed wilgocią.",
                     "feedback": "Dobra robota!"
                 },
                 {
@@ -199,7 +236,8 @@
                     "imagePath": "images/items/lighter.webp",
                     "scale": 0.7,
                     "name": "Zapalniczka",
-                    "description": "Zapalniczka, którą możesz napełnić gazem.",
+                    "hitbox": "polygon(20% 50%, 20% 85%, 80% 55%, 80% 15%)",
+                    "description": "Zapalniczna z możliwością ponownego napełnienia gazem.",
                     "feedback": "Dobra robota!"
                 },
                 {
@@ -207,6 +245,7 @@
                     "imagePath": "images/items/spices.webp",
                     "scale": 1.2,
                     "name": "Przyprawy",
+                    "hitbox": "polygon(25% 30%, 25% 70%, 75% 70%, 75% 30%)",
                     "description": "Zestaw przypraw z całego świata.",
                     "feedback": "To chyba nie jest niezbędne..."
                 },
@@ -222,10 +261,11 @@
                     "name": "Szuflada",
                     "hitbox": "polygon(38% 4%, 37% 38%, 93% 76%, 93% 38%)",
                     "openHitbox": "polygon(4% 18%, 3% 58%, 64% 97%, 93% 66%, 94% 41%, 42% 6%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/kitchen_drawer.webp",
                     "contents": ["matches", "lighter", "can_opener"],
                     "spawnPoints": [
-                        { "x": 80, "y": 40, "scale": 0.8 },
-                        { "x": 115, "y": 55, "scale": 0.8 }
+                        { "x": 80, "y": 40, "scale": 0.8, "zx": 400, "zy": 400, "zscale": 2 },
+                        { "x": 115, "y": 55, "scale": 0.8, "zx": 800, "zy": 450, "zscale": 2 }
                     ]
                 },
                 {
@@ -240,10 +280,11 @@
                     "name": "Szafka",
                     "hitbox": "polygon(0% 35%, 0% 79%, 64% 48%, 64% 6%)",
                     "openHitbox": "polygon(0 35%, 0% 79%, 24% 97%, 24% 67%, 85% 37%, 96% 43%, 96% 18%, 63% 6%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/kitchen_cabinet1.webp",
                     "contents": ["dishes", "lighter", "food"],
                     "spawnPoints": [
-                        { "x": 115, "y": 110, "scale": 0.8 },
-                        { "x": 100, "y": 155, "scale": 0.8 }
+                        { "x": 115, "y": 110, "scale": 0.8, "zx": 900, "zy": 600, "zscale": 2 },
+                        { "x": 100, "y": 155, "scale": 0.8, "zx": 350, "zy": 650, "zscale": 2 }
                     ]
                 },
                 {
@@ -258,10 +299,11 @@
                     "name": "Szafka",
                     "hitbox": "polygon(35% 30%, 35% 78%, 100% 56%, 100% 10%)",
                     "openHitbox": "polygon(35% 30%, 7% 53%, 7% 104%, 38% 78%, 100% 56%, 100% 10%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/kitchen_cabinet2.webp",
                     "contents": ["dishes", "lighter", "food", "spices"],
                     "spawnPoints": [
-                        { "x": 112, "y": 95, "scale": 0.75 },
-                        { "x": 110, "y": 155, "scale": 0.8 }
+                        { "x": 112, "y": 95, "scale": 0.75, "zx": 850, "zy": 425, "zscale": 1.3 },
+                        { "x": 110, "y": 155, "scale": 0.8, "zx": 750, "zy": 650, "zscale": 2 }
                     ]
                 }
             ]
@@ -271,40 +313,418 @@
             "name": "Sypialnia",
             "background": "images/rooms/bedroom.webp",
             "darknessLevel": 0.75,
-            "spawnPoints": [],
-            "items": []
+            "spawnPoints": [
+                { "x": 70, "y": 670, "avoid": ["wallet"] },
+                { "x": 125, "y": 210, "avoid": ["gps", "wallet"] }
+            ],
+            "items": [
+                {
+                    "id": "filters",
+                    "imagePath": "images/items/filters.webp",
+                    "scale": 0.7,
+                    "name": "Filtry",
+                    "description": "Filtry do maski gazowej",
+                    "feedback": "Dobrze! Bezpieczeństwo to podstawa!"
+                },
+                {
+                    "id": "gps",
+                    "imagePath": "images/items/gps.webp",
+                    "name": "GPS",
+                    "description": "Przenośna nawigacja GPS",
+                    "feedback": "Dobrze! Teraz już się nie zgubisz!"
+                },
+                {
+                    "id": "iron",
+                    "imagePath": "images/items/iron.webp",
+                    "scale": 0.7,
+                    "name": "Żelazko",
+                    "description": "",
+                    "feedback": "To się nie przyda..."
+                },
+                {
+                    "id": "mask",
+                    "imagePath": "images/items/mask.webp",
+                    "scale": 0.7,
+                    "name": "Maska",
+                    "description": "Prosta maska filtrująca z wymiennymi filtrami, chroniąca przed pyłem, dymem czy szkodliwymi oparami.",
+                    "feedback": "Dobrze!"
+                },
+                {
+                    "id": "sleeping_bag",
+                    "imagePath": "images/items/sleeping_bag.webp",
+                    "scale": 0.7,
+                    "name": "Śpiwór",
+                    "description": "Ciepły, zwyjany śpiwór zapewniający ochronę przed chłodem.",
+                    "feedback": "Dobrze!"
+                },
+                {
+                    "id": "wallet",
+                    "imagePath": "images/items/wallet.webp",
+                    "scale": 0.7,
+                    "name": "Portfel",
+                    "description": "Portfel z pieniędzmi i dokumentami",
+                    "feedback": "Dobrze! Gotówka też się przyda!"
+                },
+                {
+                    "id": "drawer1",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bedroom_drawer1.webp",
+                    "x": 640,
+                    "y": 400,
+                    "width": 150,
+                    "height": 100,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(33% 9%, 33% 41%, 87% 77%, 88% 45%)",
+                    "openHitbox": "polygon(35% 8%, 6% 29%, 7% 60%, 63% 97%, 89% 75%, 89% 41%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bedroom_drawer.webp",
+                    "contents": ["gps", "wallet", "filters"],
+                    "spawnPoints": [
+                        { "x": 80, "y": 40, "scale": 0.75, "zx": 600, "zy": 450, "zscale": 2.5 }
+                    ]
+                },
+                {
+                    "id": "drawer2",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bedroom_drawer2.webp",
+                    "x": 1085,
+                    "y": 595,
+                    "width": 150,
+                    "height": 110,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(29% 8%, 30% 40%, 91% 76%, 91% 44%)",
+                    "openHitbox": "polygon(33% 10%, 5% 25%, 5% 56%, 69% 93%, 91% 70%, 91% 44%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bedroom_drawer.webp",
+                    "contents": ["gps", "wallet", "filters"],
+                    "spawnPoints": [
+                        { "x": 80, "y": 40, "scale": 0.75, "zx": 600, "zy": 450, "zscale": 2.5 }
+                    ]
+                },
+                {
+                    "id": "wardrobe",
+                    "type": "wardrobe",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bedroom_wardrobe.webp",
+                    "x": 320,
+                    "y": 390,
+                    "width": 380,
+                    "height": 600,
+                    "name": "Szafa",
+                    "hitbox": "polygon(11% 28%, 11% 93%, 95% 65%, 95% 2%)",
+                    "openHitbox": "polygon(11% 28%, 11% 93%, 95% 65%, 95% 2%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bedroom_wardrobe_left.webp",
+                    "zoomAltImage": "images/rooms/containers/zoomed/bedroom_wardrobe_right.webp",
+                    "zoomDoorHitbox": "polygon(54% 11%, 54% 93%, 87% 93%, 87% 11%)",
+                    "zoomAltHitbox": "polygon(20% 11%, 20% 96%, 55% 96%, 55% 11%)",
+                    "contents": ["sleeping_bag", "iron", "mask", "filters"],
+                    "spawnPoints": [
+                        { "x": 75, "y": 425, "scale": 1, "side": "left", "zx": 480, "zy": 700, "zscale": 1.3 },
+                        { "x": 240, "y": 355, "scale": 1, "side": "right", "zx": 800, "zy": 780, "zscale": 1.2 }
+                    ]
+                }
+            ]
         },
         {
             "id": "bathroom",
             "name": "Łazienka",
             "background": "images/rooms/bathroom.webp",
             "darknessLevel": 0.95,
-            "spawnPoints": [],
-            "items": []
+            "spawnPoints": [
+                { "x": 230, "y": 595 },
+                { "x": 365, "y": 150 }
+            ],
+            "items": [
+                {
+                    "id": "medkit",
+                    "imagePath": "images/items/medkit.webp",
+                    "scale": 0.7,
+                    "name": "Apteczka",
+                    "description": "Zestawe podstawowych materiałów opatrunkowych i leków, umożliwiający udzielenie pierwszej pomocy w nagłych sytuacjach",
+                    "feedback": "Świetny wybór!"
+                },
+                {
+                    "id": "soap_bar",
+                    "imagePath": "images/items/soap_bar.webp",
+                    "scale": 0.8,
+                    "x": 895,
+                    "y": 412,
+                    "name": "Mydło",
+                    "description": "Kosta mydła służąca do zachowania podstawowej higieny osobistej.",
+                    "feedback": "Dobrze!"
+                },
+                {
+                    "id": "towel",
+                    "imagePath": "images/items/towel.webp",
+                    "scale": 1.1,
+                    "name": "Ręczniki",
+                    "description": "Zestaw ręczników w różnych rozmiaarach",
+                    "feedback": "To jest zbędne! Wystarczy jeden mały ręcznik."
+                },
+                {
+                    "id": "cosmetics_set",
+                    "imagePath": "images/items/cosmetics_set.webp",
+                    "scale": 0.7,
+                    "name": "Zestaw kosmetyków",
+                    "description": "",
+                    "feedback": "To zły wybór! Wystarczą podstawowe artykuły higieniczne."
+                },
+                {
+                    "id": "bathroom_drawer",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bathroom_drawer.webp",
+                    "x": 860,
+                    "y": 620,
+                    "width": 270,
+                    "height": 180,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(29% 0%, 29% 28%, 96% 73%, 96% 43%)",
+                    "openHitbox": "polygon(32% 4%, 8% 22%, 2% 18%, 2% 50%, 69% 96%, 69% 91%, 96% 68%, 96% 44%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bathroom_drawer.webp",
+                    "contents": ["cosmetics_set", "medkit", "towel"],
+                    "spawnPoints": [
+                        { "x": 90, "y": 50, "scale": 0.8, "zx": 300, "zy": 500, "zscale": 2 },
+                        { "x": 150, "y": 75, "scale": 0.8, "zx": 800, "zy": 550, "zscale": 2 }
+                    ]
+                }
+            ]
         },
         {
             "id": "wc",
             "name": "Toaleta",
             "background": "images/rooms/wc.webp",
             "darknessLevel": 0.85,
-            "spawnPoints": [],
-            "items": []
+            "spawnPoints": [
+                { "x": 340, "y": 300, "scale": 1 },
+                { "x": 780, "y": 400, "scale": 1 },
+                { "x": 940, "y": 400, "scale": 1 }
+            ],
+            "items": [
+                {
+                    "id": "toilet_paper",
+                    "imagePath": "images/items/toilet_paper.webp",
+                    "scale": 0.8,
+                    "name": "Papier toaletowy",
+                    "description": "",
+                    "feedback": "Dobrze!"
+                },
+                {
+                    "id": "disinfection_gel",
+                    "imagePath": "images/items/liquid_soap.webp",
+                    "scale": 0.7,
+                    "name": "Żel do dezynfekcji",
+                    "description": "Mała butelka żelu dezynfekującego, umożliwiająca oczyszczenie dłoni bez użycia wody.",
+                    "feedback": "Dobrze!"
+                },
+                {
+                    "id": "cabinet",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/wc_cabinet.webp",
+                    "x": 750,
+                    "y": 555,
+                    "width": 150,
+                    "height": 180,
+                    "name": "Szafka",
+                    "hitbox": "polygon(28% 3%, 28% 67%, 77% 85%, 77% 19%)",
+                    "openHitbox": "polygon(5% 11%, 5% 80%, 32% 68%, 72% 84%, 95% 100%, 95% 32%, 75% 19%, 28% 3%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/wc_cabinet.webp",
+                    "contents": ["toilet_paper"],
+                    "spawnPoints": [
+                        { "x": 80, "y": 50, "scale": 0.8, "zx": 600, "zy": 470, "zscale": 1.5 }
+                    ]
+                }
+            ]
         },
         {
             "id": "bedroom_girl",
             "name": "Sypialnia dziewczynki",
             "background": "images/rooms/bedroom_girl.webp",
             "darknessLevel": 0.75,
-            "spawnPoints": [],
-            "items": []
+            "spawnPoints": [
+                { "x": 575, "y": 300 },
+                { "x": 560, "y": 410 }
+            ],
+            "items": [
+                {
+                    "id": "book",
+                    "imagePath": "images/items/book.webp",
+                    "scale": 0.7,
+                    "name": "Książka",
+                    "description": "Ulubiona powieść fantasy",
+                    "feedback": "To się chyba nie przyda..."
+                },
+                {
+                    "id": "pencil",
+                    "imagePath": "images/items/pencil.webp",
+                    "scale": 0.7,
+                    "name": "Ołówek",
+                    "hitbox": "polygon(3% 35%, 76% 78%, 91% 58%, 18% 15%)",
+                    "description": "Ołówek - umożliwia robienie notatek, oznaczeń i zapisów, w kazdych warunkach.",
+                    "feedback": "Dobry wybór!"
+                },
+                {
+                    "id": "trash_bag",
+                    "imagePath": "images/items/trash_bag.webp",
+                    "scale": 0.7,
+                    "name": "Worki na śmieci",
+                    "description": "Wytrzymałe worki na śmieci z możliwością zawiązania.",
+                    "feedback": "Świetny wybór! Oby tak dalej!"
+                },
+                {
+                    "id": "blanket",
+                    "imagePath": "images/items/blanket.webp",
+                    "scale": 2.5,
+                    "x": 930,
+                    "y": 555,
+                    "name": "Koc",
+                    "hitbox": "polygon(6% 69%, 40% 82%, 90% 33%, 65% 16%, 20% 47%)",
+                    "description": "Ciepły koc",
+                    "feedback": "Zły wybór! To zajmuje dużo miejsca..."
+                },
+                {
+                    "id": "pillow",
+                    "imagePath": "images/items/pillow.webp",
+                    "scale": 0.9,
+                    "x": 840,
+                    "y": 460,
+                    "name": "Poduszka",
+                    "hitbox": "polygon(7% 41%, 23% 85%, 55% 84%, 94% 64%, 69% 11%)",
+                    "description": "Mała poduszka",
+                    "feedback": "To tylko zajmie dużo miejsca..."
+                },
+                {
+                    "id": "bed_girl_drawer",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bedroom_girl_drawer.webp",
+                    "x": 480,
+                    "y": 480,
+                    "width": 140,
+                    "height": 120,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(3% 33%, 4% 72%, 48% 46%, 49% 6%)",
+                    "openHitbox": "polygon(4% 32%, 5% 72%, 50% 93%, 95% 66%, 95% 26%, 49% 6%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bedroom_girl_drawer.webp",
+                    "contents": ["trash_bag"],
+                    "spawnPoints": [
+                        { "x": 55, "y": 50, "scale": 0.8, "zx": 550, "zy": 500, "zscale": 2.5 }
+                    ]
+                }
+            ]
         },
         {
             "id": "bedroom_teen",
             "name": "Sypialnia nastolatka",
             "background": "images/rooms/bedroom_teen.webp",
             "darknessLevel": 0.85,
-            "spawnPoints": [],
-            "items": []
+            "spawnPoints": [
+                { "x": 200, "y": 720 },
+                { "x": 430, "y": 365, "avoid": ["clothes", "crowbar"] },
+                { "x": 370, "y": 520 },
+                { "x": 620, "y": 790 },
+                { "x": 1030, "y": 670 }
+            ],
+            "items": [
+                {
+                    "id": "crowbar",
+                    "imagePath": "images/items/crowbar.webp",
+                    "scale": 0.8,
+                    "name": "Łom",
+                    "hitbox": "polygon(20% 30%, 10% 75%, 90% 50%, 86% 27%)",
+                    "description": "Mały poręczny łom do wyważania i usuwania drobnych przeszkód.",
+                    "feedback": "Może się przydać..."
+                },
+                {
+                    "id": "knife",
+                    "imagePath": "images/items/knife.webp",
+                    "scale": 0.7,
+                    "name": "Nóż",
+                    "hitbox": "polygon(10% 50%, 10% 80%, 90% 40%, 85% 7%)",
+                    "description": "Mały, solidny nóż z zabezpieczonym ostrzem.",
+                    "feedback": "Może się przydać..."
+                },
+                {
+                    "id": "console",
+                    "imagePath": "images/items/console.webp",
+                    "scale": 1,
+                    "x": 570,
+                    "y": 295,
+                    "name": "Konsola do gier",
+                    "hitbox": "polygon(20% 10%, 25% 95%, 90% 84%, 78% 5%)",
+                    "description": "",
+                    "feedback": "To zły wybór. Zastanów się jeszcze raz!"
+                },
+                {
+                    "id": "clothes",
+                    "imagePath": "images/items/clothes.webp",
+                    "scale": 1,
+                    "name": "Ubrania",
+                    "hitbox": "polygon(15% 33%, 10% 60%, 55% 83%, 90% 60%, 86% 15%)",
+                    "description": "Komplet ciepłych, wygodnych ubrań.",
+                    "feedback": "Może się przydać..."
+                },
+                {
+                    "id": "phone",
+                    "imagePath": "images/items/phone.webp",
+                    "scale": 1,
+                    "name": "Telefon",
+                    "hitbox": "polygon(20% 56%, 48% 67%, 81% 41%, 55% 35%)",
+                    "description": "Telefon konmurkowy z zapisanymi kontaktami do bliskich i służb ratunkowych.",
+                    "feedback": "Dobrze! Komunikacja też jest ważna!"
+                },
+                {
+                    "id": "multitool",
+                    "imagePath": "images/items/multitool.webp",
+                    "scale": 0.7,
+                    "name": "Multitool",
+                    "description": "Wielofunkcyjne, kieszonkowe narzędzie umożliwiające cięcie czy wykonywanie drobnych napraw.",
+                    "feedback": "Dobrze! To na pewno się przyda!"
+                },
+                {
+                    "id": "compas",
+                    "imagePath": "images/items/compas.webp",
+                    "scale": 0.7,
+                    "name": "Kompas",
+                    "description": "Kieszonkowe narzędzie nawigacyjne działające bez zewnętrznego źródła zasinia.",
+                    "feedback": "Dobrze! Teraz już się nie zgubisz!"
+                },
+                {
+                    "id": "bed_teen_drawer",
+                    "type": "container",
+                    "imagePath": "",
+                    "containerOpenImage": "images/rooms/containers/bedroom_teen_drawer.webp",
+                    "x": 480,
+                    "y": 477,
+                    "width": 140,
+                    "height": 120,
+                    "name": "Szuflada",
+                    "hitbox": "polygon(4% 40%, 4% 50%, 34% 63%, 48% 54%, 49% 12%)",
+                    "openHitbox": "polygon(6% 35%, 6% 50%, 63% 85%, 92% 66%, 95% 34%, 45% 12%)",
+                    "zoomViewImage": "images/rooms/containers/zoomed/bedroom_teen_drawer.webp",
+                    "contents": ["knife", "phone", "multitool"],
+                    "spawnPoints": [
+                        { "x": 55, "y": 50, "scale": 0.8, "zx": 550, "zy": 500, "zscale": 2.5 }
+                    ]
+                },
+                {
+                    "id": "movable_chair_bt",
+                    "type": "movable",
+                    "name": "Krzesło",
+                    "imagePath": "images/rooms/movable/bedroom_teen_chair.webp",
+                    "x": 615,
+                    "y": 455,
+                    "width": 123,
+                    "height": 192,
+                    "hitbox": "polygon(0% 43%, 0% 96%, 11% 94%, 13% 74%, 26% 76%, 26% 60%, 69% 63%, 77% 100%, 87% 100%, 79% 54%, 84% 46%, 95% 82%, 100% 81%, 93% 42%, 100% 0%, 90% 0%, 67% 27%, 21% 24%)",
+                    "moveOffset": { "x": 100, "y": 55 },
+                    "contents": ["knife", "phone", "multitool"],
+                    "spawnPoints": [
+                        { "x": 90, "y": 95, "scale": 1 }
+                    ]
+                }
+            ]
         }
     ]
 }
