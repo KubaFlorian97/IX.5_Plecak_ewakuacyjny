@@ -4,6 +4,7 @@ import { Scenario } from "~/types/types";
 import * as styles from "~/styles/main.css";
 import * as ui from "./ui.css";
 import { t } from "~/utils/localization";
+import { path } from "@/zpe-port";
 
 export class IntroScreen extends Component {
     private _step: 'threat' | 'difficulty' = 'threat';
@@ -38,7 +39,9 @@ export class IntroScreen extends Component {
                 'aria-checked': false,
                 'aria-label': `${threat.name}. ${threat.description}`
             },
-                dom('span', { className: ui['card-icon'], 'aria-hidden': true }, threat.icon),
+                dom('span', { className: ui['card-icon'], 'aria-hidden': true }, 
+                    dom('img', { 'aria-hidden': true, src: path(`images/icons/icon_${threat.id}.webp`) })
+                ),
                 dom('span', { className: ui['card-name'] }, t(threat.name))
             );
 
@@ -62,6 +65,9 @@ export class IntroScreen extends Component {
 
         this._scenario.difficulties.forEach(diff => {
             const btn = dom('button', { className: ui['select-card'], role: 'radio', 'aria-checked': false },
+                dom('span', { className: ui['card-icon'], 'aria-hidden': true }, 
+                    dom('img', { 'aria-hidden': true, src: path(`images/icons/icon_${diff.id}.webp`) })
+                ),
                 dom('span', { className: ui['card-name'] }, t(diff.name)),
                 dom('span', { className: ui['card-desc'] }, `${diff.timeLimit} min.`)
             );

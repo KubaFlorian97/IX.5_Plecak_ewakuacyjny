@@ -161,11 +161,11 @@ export class GameScene extends Component {
                 ),
                 dom('div', { className: gs['inv-item-details'] },
                     dom('span', { className: gs['name'] }, itemData.name as string)
-                ),
-                isCollected ? dom('button', {
-                    className: 'inv-remove-btn',
-                    'aria-label': `Usuń przedmiot ${itemData.name}`
-                }, "✕") : ""
+                )
+                // ,isCollected ? dom('button', {
+                //     className: 'inv-remove-btn',
+                //     'aria-label': `Usuń przedmiot ${itemData.name}`
+                // }, "✕") : ""
             );
 
             this._inventoryContent.appendChild(itemTile);
