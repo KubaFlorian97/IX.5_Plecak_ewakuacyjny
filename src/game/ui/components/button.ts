@@ -7,6 +7,7 @@ export interface ButtonProps {
     variant?: 'primary' | 'secondary' | 'active';
     className?: string | string[];
     ariaLabel?: string;
+    style?: string;
 }
 
 export function createButton(props: ButtonProps): HTMLButtonElement {
@@ -17,6 +18,7 @@ export function createButton(props: ButtonProps): HTMLButtonElement {
     
     return dom('button', {
         className: [ui['btn'], variantClass, ...extraClasses],
+        style: props.style ? props.style : "",
         onclick: props.onClick,
         'aria-label': props.ariaLabel || props.label
     }, props.label);
