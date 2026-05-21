@@ -113,6 +113,16 @@ class SoundManager {
         }
     }
 
+    public pauseResumeVoiceover() {
+        if (this._currentVoiceover && this._currentVoiceover.paused) {
+            this._currentVoiceover.play();
+        } else if (this._currentVoiceover && !this._currentVoiceover.paused) {
+            this._currentVoiceover.pause();
+        }
+    }
+
+    public get isVoiceoverPlaying() { return this._currentVoiceover && !this._currentVoiceover.paused; }
+
     public toggleSfxMute() {
         this.sfxMuted = !this.sfxMuted;
         const vol = this.sfxMuted ? 0 : this._sfxVolume;

@@ -3,6 +3,7 @@ import { dom } from "~/nano_core/dom";
 import { createButton } from "./components/button";
 import { Modal } from "./components/modal";
 import { Difficulty, Scenario } from "~/types/types";
+import { State } from "~/state";
 import * as styles from "~/styles/main.css";
 import * as ui from "./ui.css";
 import { t } from "~/utils/localization";
@@ -14,9 +15,11 @@ export class IntroScreen extends Component {
     private _selectedThreat: string | null = null;
     private _selectedDifficulty: string | null = null;
     private _customDifficulty: Difficulty | null = null;
+    private _voPlayResume!: HTMLButtonElement;
 
     constructor(
         container: HTMLElement,
+        private _state: State,
         private _scenario: Scenario,
         private _onStartGame: (difficultyId: string, threatId: string) => void
     ) {
@@ -40,6 +43,7 @@ export class IntroScreen extends Component {
 
         this._scenario.threats.forEach(threat => {
             const btn = this.createCardBtn(t(threat.name), `images/icons/icon_${threat.id}.webp`, "", () => {
+                soundManager.play('click');
                 this._selectedThreat = threat.id;
                 this._step = 1;
                 this.render();
@@ -100,6 +104,16 @@ export class IntroScreen extends Component {
         const audioPath = threat.briefingAudio || `audio/descriptions/${threat.id}_desc.mp3`;
         soundManager.playVoiceover(audioPath);
 
+        this._voPlayResume = createButton({
+            label: "Wstrzymaj", variant: 'secondary',
+            className: ui['btn-small'],
+            onClick: () => {
+                soundManager.play('click');
+                soundManager.pauseResumeVoiceover();
+                this._voPlayResume.textContent = soundManager.isVoiceoverPlaying ? "Wstrzymaj" : "Wznów";
+            }
+        });
+
         const briefingContainer = dom('div', { className: ui['briefing-container'] },
             dom('img', { className: ui["briefing-horn"], src: 'images/ui/icon_bullhorn.webp' }),
             dom('h1', { className: ui["briefing-title"] }, t(threat.name) || threat.name),
@@ -107,8 +121,22 @@ export class IntroScreen extends Component {
                 dom('span', {}, `${t('intro.diff')} ${t(difficulty.name)}`),
                 dom('span', {}, `${t('intro.cust_time')} ${difficulty.timeLimit} min`)
             ),
-            dom('p', { className: ui['briefing-alert'] }, 
-                t(threat.alertMessage) || threat.alertMessage
+            dom('div', { className: ui["briefing-alert"] },
+                dom('p', { }, 
+                    t(threat.alertMessage) || threat.alertMessage
+                ),
+                dom('div', { style: 'display: flex; gap: 1rem; justify-content: center;' },
+                    createButton({
+                        label: "Od początku", variant: 'secondary',
+                        className: ui['btn-small'],
+                        onClick: () => {
+                            soundManager.play('click');
+                            soundManager.stopVoiceover();
+                            soundManager.playVoiceover(audioPath);
+                        }
+                    }),
+                    this._voPlayResume
+                )
             ),
             dom('div', { style: 'display: flex; gap: 1rem; justify-content: center;' },
                 createButton({
@@ -153,20 +181,40 @@ export class IntroScreen extends Component {
             oninput: (e: Event) => updateTimeLabel(parseInt((e.target as HTMLInputElement).value, 10))
         });
 
+        const darknessBtn = dom('button', {
+            className: [ ui['btn'], ui['btn-secondary'], ui['settings-btn'], ui['toggle-btn'] ]
+        }, "WYŁ");
+        darknessBtn.onclick = () => {
+            isDarkness = !isDarkness;
+            darknessBtn.textContent = isDarkness ? "WYŁ" : "WŁ";
+            darknessBtn.classList.toggle(ui['btn-active']);
+        };
+
+        const hintsBtn = dom('button', {
+            className: [ ui['btn'], ui['btn-secondary'], ui['settings-btn'], ui['toggle-btn'], ui['btn-active'] ]
+        }, "WŁ");
+        hintsBtn.onclick = () => {
+            isHints = !isHints;
+            hintsBtn.textContent = isHints ? "WŁ" : "WYŁ";
+            hintsBtn.classList.toggle(ui['btn-active']);
+        };
+
         const content = dom('div', { style: 'text-align: left; display: flex; flex-direction: column; gap: 1.5rem;' },
             dom('div', { style: 'display: flex; align-items: center; gap: 1rem;' },
                 dom('span', { style: 'width: 140px; font-weight: bold; font-size: var(--fs-md);' }, "Czas na ucieczkę:"),
                 timeSlider, timeLabel
             ),
-            dom('div', { style: 'display: flex; gap: 1rem;' },
-                createButton({ label: "Ciemność (Wł/Wył)", variant: 'secondary', onClick: (e) => {
-                    isDarkness = !isDarkness;
-                    (e.target as HTMLButtonElement).style.borderColor = isDarkness ? 'var(--c-success)' : 'var(--c-primary)';
-                }}),
-                createButton({ label: "Podpowiedzi (Wł/Wył)", variant: 'secondary', style: 'border-color: var(--c-success);', onClick: (e) => {
-                    isHints = !isHints;
-                    (e.target as HTMLButtonElement).style.borderColor = isHints ? 'var(--c-success)' : 'var(--c-primary)';
-                }})
+            dom('div', { className: ui['toggle-btn-row'] },
+                dom('span', { className: ui['toggle-btn-label'] }, t('intro.cust_dark')),
+                dom('div', { className: ui['toggle-wrapper'] },
+                    darknessBtn
+                )
+            ),
+            dom('div', { className: ui['toggle-btn-row'] },
+                dom('span', { className: ui['toggle-btn-label'] }, t('intro.cust_hints')),
+                dom('div', { className: ui['toggle-wrapper'] },
+                    hintsBtn
+                )
             )
         );
 
@@ -182,6 +230,11 @@ export class IntroScreen extends Component {
                     };
                     
                     this._selectedDifficulty = 'custom';
+                    this._state.set({
+                        difficultyId: this._selectedDifficulty,
+                        threatId: this._selectedThreat!,
+                        customDifficulty: this._customDifficulty
+                    });
                     this._step = 2;
                     customModal.dispose();
                     this.render();

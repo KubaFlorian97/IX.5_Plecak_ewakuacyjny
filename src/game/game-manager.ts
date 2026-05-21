@@ -13,6 +13,20 @@ import { soundManager } from "~/utils/sound-manager";
 import { createHelpModal } from "./ui/help-modal";
 import { SettingsModal } from "./ui/settings-modal";
 import { GameScene } from "./game-scene";
+import { CursorManager } from "~/utils/cursor-manager";
+import { _gameWrapper } from "~/app";
+
+export let _settingsState = {
+    textSize: 'A' as 'A' | 'AA' | 'AAA',
+    highContrast: false,
+    reduceMotion: false,
+    timeFreeze: false,
+    colorFilter: 'none',
+    cursorSize: 'small' as 'small' | 'large',
+    cursorColor: 'white' as 'white' | 'yellow' | 'black' | 'red',
+    sfxVolume: 1.0,
+    musicVolume: 0.2
+};
 
 export class GameManager extends Disposable {
     private _currentView: any = null;
@@ -41,6 +55,8 @@ export class GameManager extends Disposable {
         const currentState = this._state.get();
         soundManager.setupAutoplayUnlock();
         this._topBar.render();
+
+        CursorManager.applyCursor(_gameWrapper, 'white', 'small');
 
         if (currentState.collectedItems.length > 0 || currentState.threatId) {
             this.showResumePrompt();
@@ -81,6 +97,7 @@ export class GameManager extends Disposable {
         
         this._currentView = this._register(new IntroScreen(
             this._container,
+            this._state,
             this._scenario,
             (difficultyId, threatId) => {
                 this.startGame(difficultyId, threatId);
