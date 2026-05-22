@@ -9,6 +9,7 @@ import { path } from "@/zpe-port";
 import * as styles from "~/styles/main.css";
 import * as ui from "./ui/ui.css";
 import * as gs from "./game.css";
+import { HotspotRenderer } from "./hotspot-renderer";
 
 export class GameScene extends Component {
     private _viewPortWrapper!: HTMLElement;
@@ -19,6 +20,9 @@ export class GameScene extends Component {
 
     private _renderedRoomId: string | null = null;
     private _isInventoryOpen: boolean = false;
+
+    private _hotspotRenderer: HotspotRenderer;
+
 
     constructor(
         container: HTMLElement,
@@ -32,6 +36,18 @@ export class GameScene extends Component {
         }));
 
         container.appendChild(this.element);
+
+        this._hotspotRenderer = new HotspotRenderer(
+            this._state,
+            {
+                onChangeRoom: (roomId: string) => {
+                    this._state.set({ currentRoomId: roomId });
+                },
+                onOpenContainer: (item) => {
+                    this.showContainerModal(item);
+                }
+            }
+        );
 
         this._register(this._state.current.onDidChange((newState) => {
             if (newState.currentRoomId !== this._renderedRoomId) {
@@ -110,18 +126,26 @@ export class GameScene extends Component {
             log.error(`Nie znaleziono danych dla pokoju: ${roomId}`);
             return;
         }
-        log.info(`Renderowanie pokoju: ${roomId}`);
 
         this._renderedRoomId = roomId;
+        log.info(`Renderowanie pokoju: ${roomId}`);
 
-        const roomElement = dom('div', {
+        const roomLayer = dom('div', {
             className: gs['room-layer'],
             style: `background-image: url('${roomData.background}');`,
             role: "application",
             'aria-label': `Pokój: ${t(roomData.name)}`
         });
 
-        this._viewPortWrapper.appendChild(roomElement);
+        if (roomData.items) {
+            this._hotspotRenderer.render(roomLayer, roomData.items);
+        }
+
+        this._viewPortWrapper.appendChild(roomLayer);
+    }
+
+    private showContainerModal(containerItem: ItemData) {
+        log.success(`Wywołano zbliżenie kontenera: ${containerItem.id}`);
     }
 
     private renderInventoryItems() {

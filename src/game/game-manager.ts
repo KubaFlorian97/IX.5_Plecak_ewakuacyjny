@@ -15,6 +15,7 @@ import { SettingsModal } from "./ui/settings-modal";
 import { GameScene } from "./game-scene";
 import { CursorManager } from "~/utils/cursor-manager";
 import { _gameWrapper } from "~/app";
+import { generateItemPlacements } from "~/utils/item-spawner";
 
 export let _settingsState = {
     textSize: 'A' as 'A' | 'AA' | 'AAA',
@@ -121,10 +122,13 @@ export class GameManager extends Disposable {
 
     private startGame(difficultyId: string, threatId: string) {
         log.success(`Rozpoczęto nową grę. Zagrożenie: ${threatId}, Poziom: ${difficultyId}`);
-        this._state.set({ threatId, difficultyId });
-
-        this.clearView();
+        this._state.reset();
         
+        const placements = generateItemPlacements(this._scenario);
+
+        this._state.set({ threatId, difficultyId, itemPlacements: placements });
+        this.clearView();
+
         this._currentView = this._register(new GameScene(
             this._container,
             this._state,

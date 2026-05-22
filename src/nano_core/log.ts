@@ -7,5 +7,8 @@ export const log = {
     },
     error(message: string, ...args: any[]) {
         console.log(`%c[ZPE ERROR] ${message}`, 'color: #dc3545; font-weight: bold', ...args);
+    },
+    warn(message: string, ...args: any[]) {
+        console.log(`%c[ZPE WARNING] ${message}`, 'color: #ffc107; font-weight: bold', ...args);
     }
 }
