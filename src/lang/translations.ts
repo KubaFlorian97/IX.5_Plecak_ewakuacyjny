@@ -7,7 +7,8 @@ export const translations = {
             settings_btn: "Ustawienia",
             fullscreen_btn: "Pełny ekran",
             sound_mute_btn: "Przycisk wyciszenia dźwięków",
-            menu_btn: "Menu"
+            menu_btn: "Menu",
+            title: "PLECAK EWAKUACYJNY"
         },
         help: {
             title: "INSTRUKCJA",
