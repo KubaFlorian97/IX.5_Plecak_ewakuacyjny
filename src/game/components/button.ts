@@ -1,4 +1,4 @@
-import * as styles from "./button.css";
+import * as styles from "./inputs.css";
 import * as mainCss from "~/styles/main.css";
 
 export interface ButtonProps {

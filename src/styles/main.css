@@ -75,7 +75,8 @@
     --z-ui: 100;
     --z-panel: 10000;
     --z-modal: 1000;
-    --z-tooltip: 2000;
+    --z-global-modal: 3000;
+    --z-tooltip: 3000;
     --z-cursor: 9999;
 
     cursor: var(--current-cursor, auto) !important;
@@ -236,6 +237,40 @@ div.game-wrapper * {
 
 .game-wrapper .bg-red {
     background: #e74c3c;
+}
+
+/* --- TEXT SIZES --- */
+.normal {
+    --scale-factor: 1;
+}
+
+.medium {
+    --scale-factor: 1.5;
+}
+
+.large {
+    --scale-factor: 2;
+}
+
+/* --- SCROLLABLE --- */
+.scrollable::-webkit-scrollbar {
+    width: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: var(--c-primary);
+    border-radius: var(--border-radius);
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background: var(--c-primary-dark);
 }
 
 /* --- SR-ONLY --- */

@@ -1,13 +1,16 @@
 import { t } from "~/utils/localization";
+import * as mainCss from "~/styles/main.css";
 import * as styles from "./intro-page.css";
-import * as buttons from "../components/button.css";
+import * as buttons from "../components/inputs.css";
 import { createButton } from "../components/button";
 import { SoundManager } from "~/utils/sound-manager";
+import { FocusTrap } from "~/utils/focus-trap";
 
 export class IntroPage {
     private _container: HTMLElement;
     private _element: HTMLElement;
     private _hasSavedGame: boolean;
+    private _focusTrap: FocusTrap;
 
     constructor(container: HTMLElement, hasSavedGame: boolean) {
         this._container = container;
@@ -17,29 +20,33 @@ export class IntroPage {
         this._element.className = styles["intro-page"];
 
         this.render();
+
+        this._focusTrap = new FocusTrap(this._element);
     }
 
     public show() {
         this._container.appendChild(this._element);
+        this._focusTrap.activate();
     }
 
     public hide() {
         if (this._element.parentElement) {
             this._element.parentElement.removeChild(this._element);
         }
+        this._focusTrap.deactivate();
     }
 
     private render() {
         const modal = document.createElement("div");
         modal.className = styles["intro-modal"];
 
-        const readingWrapper = document.createElement("div");
-        readingWrapper.className = styles["reading-wrapper"];
-
         const title = document.createElement("h1");
         title.className = styles["intro-title"];
         title.textContent = t('intro.resume_title');
-        readingWrapper.appendChild(title);
+        modal.appendChild(title);
+
+        const readingWrapper = document.createElement("div");
+        readingWrapper.className = `${styles["reading-wrapper"]} ${mainCss["scrollable"]}`;
 
         const alertBox = document.createElement("div");
         alertBox.className = styles["alert-box"];

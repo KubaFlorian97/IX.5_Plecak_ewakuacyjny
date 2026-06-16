@@ -9,14 +9,16 @@
     justify-content: center;
     background-color: transparent;
     z-index: var(--z-modal);
-    padding-top: calc(var(--dynamic-top-height));
+    padding-top: calc(var(--tb-height));
 }
 
 .intro-modal {
     position: relative;
+    display: flex;
     background-color: var(--bg-panel);
     border-radius: var(--border-radius);
     max-width: 80cqw;
+    max-height: calc(85cqh - var(--tb-height));
     box-shadow: var(--shadow-hard);
     flex-direction: column;
     align-items: stretch;
@@ -35,7 +37,7 @@
     justify-self: center;
     min-height: 0;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1rem;
 }
 
