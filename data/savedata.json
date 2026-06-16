@@ -1,0 +1,107 @@
+{
+    "collectedItems": [
+        "pendrive",
+        "map",
+        "spices"
+    ],
+    "currentRoomId": "kitchen",
+    "openedContainers": [],
+    "hasFlashlight": false,
+    "timeLeft": 1774928.8999999985,
+    "itemPlacements": {
+        "radio": {
+            "x": 925,
+            "y": 370,
+            "roomId": "living_room"
+        },
+        "batteries": {
+            "x": 215,
+            "y": 280,
+            "roomId": "living_room"
+        },
+        "docs": {
+            "x": 30,
+            "y": 75,
+            "roomId": "living_room",
+            "containerId": "movable_chair_lv",
+            "scale": 1
+        },
+        "map": {
+            "x": 900,
+            "y": 630,
+            "roomId": "living_room"
+        },
+        "flashlight": {
+            "x": 100,
+            "y": 60,
+            "roomId": "living_room",
+            "containerId": "lv_cabinet1",
+            "scale": 0.8,
+            "zx": 650,
+            "zy": 320,
+            "zscale": 2
+        },
+        "pendrive": {
+            "x": 945,
+            "y": 460,
+            "roomId": "living_room"
+        },
+        "water": {
+            "x": 600,
+            "y": 240,
+            "roomId": "kitchen"
+        },
+        "can_opener": {
+            "x": 530,
+            "y": 270,
+            "roomId": "kitchen"
+        },
+        "matches": {
+            "x": 115,
+            "y": 55,
+            "roomId": "kitchen",
+            "containerId": "k_drawer",
+            "scale": 0.8,
+            "zx": 800,
+            "zy": 450,
+            "zscale": 2
+        },
+        "spices": {
+            "x": 610,
+            "y": 550,
+            "roomId": "kitchen"
+        },
+        "food": {
+            "x": 112,
+            "y": 95,
+            "roomId": "kitchen",
+            "containerId": "k_cabinet2",
+            "scale": 0.75,
+            "zx": 850,
+            "zy": 425,
+            "zscale": 1.3
+        },
+        "dishes": {
+            "x": 110,
+            "y": 155,
+            "roomId": "kitchen",
+            "containerId": "k_cabinet2",
+            "scale": 0.8,
+            "zx": 750,
+            "zy": 650,
+            "zscale": 2
+        },
+        "lighter": {
+            "x": 100,
+            "y": 155,
+            "roomId": "kitchen",
+            "containerId": "k_cabinet1",
+            "scale": 0.8,
+            "zx": 350,
+            "zy": 650,
+            "zscale": 2
+        }
+    },
+    "threatId": "fire",
+    "difficultyId": "easy"
+}

@@ -6,6 +6,7 @@ import { SoundManager } from "~/utils/sound-manager";
 import { TopBar } from "./components/top-bar";
 import * as mainCss from "~/styles/main.css";
 import { IntroPage } from "./pages/intro-page";
+import { SetupPage } from "./pages/setup-page";
 import { SettingsModal } from "./modals/settings-modal";
 import { HelpModal } from "./modals/help-modal";
 
@@ -29,12 +30,14 @@ export class GameManager {
     private _helpModal?: HelpModal;
 
     private _introPage?: IntroPage;
+    private _setupPage?: SetupPage;
 
     private _loadingElement?: HTMLElement;
 
     private _timeLeft: number = 0;
     private _lastTime: number = 0;
     private _totalTime: number = 0;
+    private _animId: number | null = null;
 
     private _diff?: Difficulty;
     private _threat?: Threat;
@@ -72,6 +75,8 @@ export class GameManager {
         this._originalScenario = JSON.parse(JSON.stringify(scenario));
 
         CursorManager.applyCursor(this._container, 'white', 'small');
+
+        this.setupGlobalInput();
     }
 
     public async start(stateData: GameState) {
@@ -145,6 +150,45 @@ export class GameManager {
             // Pomoc
             this._container.addEventListener('toggle-help', () => {
                 this.toggleHelp();
+            });
+
+            this._container.addEventListener('new-game', () => {
+                if (this._introPage) {
+                    this._introPage.hide();
+                }
+
+                const initialPlacements = this.generateItemPlacements(this._scenario);
+                this._state.set({
+                    collectedItems: [],
+                    currentRoomId: this._scenario.startRoomId,
+                    openedContainers: [],
+                    hasFlashlight: false,
+                    timeLeft: undefined,
+                    customDifficulty: undefined,
+                    itemPlacements: initialPlacements
+                });
+
+                this._setupPage = new SetupPage(this._mainContent, this._scenario);
+                this._setupPage.show();
+            });
+
+            this._container.addEventListener('setup-complete', (e: any) => {
+                if (this._setupPage) {
+                    this._setupPage.hide();
+                }
+
+                const detail = e.detail;
+                this._state.set({
+                    threatId: detail.threat?.id,
+                    difficultyId: detail.diff?.id,
+                    customDifficulty: detail.customDiff
+                });
+
+                this.launchGame();
+            });
+
+            this._container.addEventListener('resume-game', () => {
+                this.launchGame();
             });
 
             this._listenersAttached = true;
@@ -325,8 +369,127 @@ export class GameManager {
         }
     }
 
+    private launchGame() {
+        const s = this._state.get() as GameState;
+
+        // Odśwież obiekt _diff i _threat na podstawie stanu
+        if (s.difficultyId === 'custom' && s.customDifficulty) {
+            this._diff = s.customDifficulty;
+        } else {
+            this._diff = this._scenario.difficulties.find(d => d.id === s.difficultyId);
+        }
+        this._threat = this._scenario.threats.find(t => t.id === s.threatId);
+
+        // Fallback w razie błędów
+        if (!this._threat) this._threat = this._scenario.threats[0];
+        if (!this._diff) this._diff = this._scenario.difficulties[0];
+
+        // Ukryj menu główne i okna
+        if (this._introPage) {
+            this._introPage.hide();
+        }
+
+        this._container.classList.add(mainCss["gameplay-mode"] || "gameplay-mode");
+
+        this._isRunning = true;
+        this._startTime = Date.now();
+
+        // LOGIKA CZASU
+        if (s.timeLeft !== undefined && s.timeLeft > 0) {
+            this._timeLeft = s.timeLeft;
+            this._totalTime = this._diff.timeLimit * 60 * 1000;
+        } else {
+            this._timeLeft = this._diff.timeLimit * 60 * 1000;
+            this._totalTime = this._timeLeft;
+        }
+
+        // TODO: Zainicjuj klasy UI odpowiedzialne za gameplay (InventoryUI, MinimapUI, GameScene, GameClock)
+        // Np.:
+        // this._inventory = new InventoryUI(this._container);
+        // this._minimap = new MinimapUI(this._container);
+        // this._gameScene = new GameScene(this._container);
+        // this._clock = new GameClock(this._container);
+        // ...
+
+        this._lastTime = performance.now();
+        this.loop(this._lastTime);
+    }
+
+    private loop = (t: number) => {
+        if (!this._isRunning) return;
+        const dt = t - this._lastTime;
+        this._lastTime = t;
+
+        this._timeLeft -= dt;
+        if (this._timeLeft <= 0) {
+            this._timeLeft = 0;
+            this.endGame(false);
+        }
+
+        // TODO: Zaktualizuj UI czasu i stan gry
+        // this._clock?.update(this._timeLeft, this._totalTime);
+        // this._gameScene?.update(dt);
+
+        this._animId = requestAnimationFrame(this.loop);
+    }
+
+    private endGame(success: boolean) {
+        this._isRunning = false;
+        if (this._animId) cancelAnimationFrame(this._animId);
+
+        this._container.classList.remove(mainCss["gameplay-mode"] || "gameplay-mode");
+
+        const s = this._state.get() as GameState;
+        this._state.set({ ...s, timeLeft: undefined });
+
+        // TODO: Pokaż SummaryScreen
+        // new SummaryScreen(...)
+    }
+
+    private setupGlobalInput() {
+        window.addEventListener('keydown', (e) => {
+            if (!this._container.isConnected) return;
+
+            const target = e.target as HTMLElement;
+            const isTypingField = target.tagName === 'TEXTAREA' ||
+                (target.tagName === 'INPUT' &&
+                    !['range', 'checkbox', 'radio', 'button', 'submit', 'reset', 'file'].includes((target as HTMLInputElement).type));
+
+            if (!isTypingField) {
+                if (e.key === 'f' || e.key === 'F') {
+                    this.toggleFullscreen();
+                }
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    this.toggleFullscreen();
+                }
+                if (e.key === 'i' || e.key === 'I') {
+                    // TODO: Otwórz ekwipunek
+                    // (this._inventory as any)?.toggleInv();
+                }
+                if (e.key === 'h' || e.key === 'H') {
+                    this.toggleHelp();
+                }
+                if (e.key === 's' || e.key === 'S') {
+                    this.toggleSettings();
+                }
+            }
+        });
+    }
+
+    private toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            this._container.requestFullscreen().catch(err => {
+                console.warn(`Error attempting to enable fullscreen mode: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
     public dispose() {
         this._isRunning = false;
+        if (this._animId) cancelAnimationFrame(this._animId);
         this._container.innerHTML = "";
     }
 }

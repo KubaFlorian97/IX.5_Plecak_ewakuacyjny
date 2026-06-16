@@ -1,7 +1,10 @@
+import * as mainCss from "~/styles/main.css";
 import * as styles from "./setup-page.css";
 import { Difficulty, Scenario, Threat } from "~/types/types";
 import { FocusTrap } from "~/utils/focus-trap";
 import { t } from "~/utils/localization";
+import { path } from "@/zpe-port";
+import { SoundManager } from "~/utils/sound-manager";
 
 export class SetupPage {
     private _container: HTMLElement;
@@ -69,23 +72,188 @@ export class SetupPage {
         modalTitle.textContent = isThreatStage ? t("intro.step1") : t('intro.step2');
         this._modal.appendChild(modalTitle);
 
-        /*
-            <div class="parent">
-                <div class="div1">1</div>
-                <div class="div2">2</div>
-                <div class="div3">3</div>
-                <div class="div4">4</div>
-                <div class="div5">5</div>
-            </div>
-            .parent {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(3, 1fr);
-                gap: 8px;
+        const selectionGrid = document.createElement("div");
+        selectionGrid.className = `${styles["selection-grid"]} ${mainCss["scrollable"]}`;
+        this._modal.appendChild(selectionGrid);
+
+        const actionArea = document.createElement("div");
+        actionArea.style.marginTop = "1rem";
+        actionArea.style.display = "flex";
+        actionArea.style.justifyContent = "center";
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = mainCss["btn"] || "btn";
+        nextBtn.textContent = isThreatStage ? "Dalej" : "Graj";
+        nextBtn.disabled = true; // Disabled until selection is made
+
+        nextBtn.onclick = () => {
+            SoundManager.play('click');
+            if (isThreatStage) {
+                this.render('diff');
+            } else {
+                this._onComplete();
             }
-            .div5 {
-                grid-column: span 2 / span 2;
+        };
+
+        actionArea.appendChild(nextBtn);
+
+        if (isThreatStage) {
+            this._renderThreatSelection(selectionGrid, nextBtn);
+        } else {
+            this._renderDiffSelection(selectionGrid, nextBtn);
+        }
+
+        this._modal.appendChild(actionArea);
+    }
+
+    private _renderThreatSelection(selectionGrid: HTMLElement, nextBtn: HTMLButtonElement) {
+        const threats = this._scenario.threats;
+
+        const selectCard = (card: HTMLElement, th?: Threat, isCrisis?: boolean) => {
+            Array.from(selectionGrid.children).forEach(c => c.classList.remove(styles["selected"]));
+            card.classList.add(styles["selected"]);
+            this._selThreat = th;
+            this._isCrisis = isCrisis || false;
+            nextBtn.disabled = false;
+        };
+
+        threats.forEach(th => {
+            const card = this.createSelectionCard(
+                t(th.name),
+                t(th.description),
+                path(this._threatIcon[th.id]),
+                `Zagrożenie: ${t(th.name)}. ${th.description}`,
+                () => {
+                    SoundManager.play('click');
+                    selectCard(card, th, false);
+                }
+            );
+            selectionGrid.appendChild(card);
+        });
+
+        const crisisCard = this.createSelectionCard(
+            t('intro.crisis_mode'),
+            t('intro.crisis_desc'),
+            path(this._threatIcon["crisis"]),
+            `Zagrożenie: ${t('intro.crisis_mode')}. ${t('intro.crisis_desc')}`,
+            () => {
+                SoundManager.play('click');
+                selectCard(crisisCard, undefined, true);
+            },
+            true
+        );
+        selectionGrid.appendChild(crisisCard);
+    }
+
+    private _renderDiffSelection(selectionGrid: HTMLElement, nextBtn: HTMLButtonElement) {
+        const diffs = this._scenario.difficulties;
+
+        const selectCard = (card: HTMLElement, diff?: Difficulty, isCustom?: boolean) => {
+            Array.from(selectionGrid.children).forEach(c => c.classList.remove(styles["selected"]));
+            card.classList.add(styles["selected"]);
+            this._selDiff = diff;
+            this._isCustom = isCustom || false;
+            nextBtn.disabled = false;
+        };
+
+        diffs.forEach(diff => {
+            if (diff.id !== 'hardcore') {
+                const card = this.createSelectionCard(
+                    t(diff.name),
+                    `Czas: ${diff.timeLimit} min.`,
+                    path(this._diffIcon[diff.id]),
+                    `Poziom trudności: ${t(diff.name)}. Czas: ${diff.timeLimit} minut.`,
+                    () => {
+                        SoundManager.play('click');
+                        selectCard(card, diff, false);
+                    },
+                );
+                selectionGrid.appendChild(card);
             }
-        */
+        });
+
+        const customCard = this.createSelectionCard(
+            t('intro.custom_mode'),
+            t('intro.custom_desc'),
+            path(this._diffIcon["custom"]),
+            `Poziom trudności: ${t('intro.custom_mode')}. ${t('intro.custom_desc')}.`,
+            () => {
+                SoundManager.play('click');
+                selectCard(customCard, undefined, true);
+            }
+        );
+        selectionGrid.appendChild(customCard);
+
+        const hardcore = diffs.find(d => d.id === 'hardcore');
+        if (hardcore) {
+            const hardcoreCard = this.createSelectionCard(
+                t(hardcore.name),
+                `Czas: ${hardcore.timeLimit} min.`,
+                path(this._diffIcon[hardcore.id]),
+                `Poziom trudności: ${t(hardcore.name)}. Czas: ${hardcore.timeLimit} minut.`,
+                () => {
+                    SoundManager.play('click');
+                    selectCard(hardcoreCard, hardcore, false);
+                },
+                true
+            );
+            selectionGrid.appendChild(hardcoreCard);
+        }
+    }
+
+    private _onComplete() {
+        this._element.dispatchEvent(new CustomEvent('setup-complete', {
+            bubbles: true,
+            detail: {
+                threat: this._selThreat,
+                isCrisis: this._isCrisis,
+                diff: this._selDiff,
+                isCustom: this._isCustom
+            }
+        }));
+    }
+
+    private createSelectionCard(
+        title: string,
+        sub: string,
+        img: string,
+        srOnly: string,
+        onclick: () => void,
+        double?: boolean
+    ): HTMLElement {
+        const card = document.createElement("div");
+        card.tabIndex = 0;
+        card.role = "button";
+        card.className = `${styles["selection-card"]} ${double ? styles["double"] : ""}`;
+        card.onclick = onclick;
+
+        const cardImgSpan = document.createElement("span");
+        cardImgSpan.ariaHidden = "true";
+        card.appendChild(cardImgSpan);
+
+        const cardImg = document.createElement("img");
+        cardImg.src = img;
+        cardImg.alt = "";
+        cardImg.draggable = false;
+        cardImgSpan.appendChild(cardImg);
+
+        const cardTitle = document.createElement("div");
+        cardTitle.className = styles["card-title"];
+        cardTitle.ariaHidden = "true";
+        cardTitle.textContent = title;
+        card.appendChild(cardTitle);
+
+        const cardSub = document.createElement("div");
+        cardSub.className = styles["card-sub"];
+        cardSub.ariaHidden = "true";
+        cardSub.textContent = sub;
+        card.appendChild(cardSub);
+
+        const sr = document.createElement("span");
+        sr.className = mainCss["sr-only"];
+        sr.textContent = srOnly;
+        card.appendChild(sr);
+
+        return card;
     }
 }
