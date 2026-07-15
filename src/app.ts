@@ -1,69 +1,79 @@
-import { getData, loadCss, path } from "@/zpe-port";
-import * as styles from "./styles/main.css";
-import { state } from "./state";
-import { Scenario } from "./types/types";
-import { dom } from "./nano_core/dom";
-import { log } from "./nano_core/log";
+import { loadCss, path, setState } from "@/zpe-port";
 import { GameManager } from "./game/game-manager";
+import { State } from "./state";
+import { AssetLoader } from "./utils/asset-loader";
+import { Scenario } from "./types/types";
 
-let _gm: GameManager | null;
+import * as styles from "./style/style.css";
+
+export const state = new State();
+let _gm: GameManager | null = null;
+let _container: HTMLElement;
 export let _gameWrapper: HTMLElement;
 
 export function init(container: HTMLElement): Promise<void> {
+    let verNum = "0.7.15";
     return new Promise((resolve) => {
-        container.innerHTML = "";
+        _container = container;
+        console.info(`[ZPE Game] Running Game | v${verNum}b`);
 
-        const landscapeOverlay = dom('div', { className: styles['landscape-overlay'], 'aria-hidden': true },
-            dom('div', { className: styles['landscape-icon'] }, "📱"), 
-            dom('h2', { style: 'margin: 0 0 1rem 0; color: var(--c-secondary);' }, "Obróć urządzenie"),
-            dom('p', { style: 'margin: 0;' }, "Aby gra działała poprawnie, prosimy o obrócenie urządzenia do poziomu.")
-        );
-
-        // Wrapper init
-        _gameWrapper = dom('div', {
-            className: styles["game-wrapper"],
-            role: "application",
-            "aria-label": "Gra Plecak Ewakuacyjny"
+        state.subscribe((newState) => {
+            setState(newState);
         });
-        _gameWrapper.appendChild(landscapeOverlay)
-        container.appendChild(_gameWrapper);
 
-        loadCss("entry.css").then(() => {
-            fetch(path("scenario.json"))
-                .then(response => response.json())
-                .then((scenario: Scenario) => {
-                    _gm = new GameManager(_gameWrapper, state, scenario);
-                    resolve();
-                })
-                .catch(err => {
-                    log.error("Błąd ładowania scenariusza gry: ", err);
-                    resolve();
-                });
-        });
+        _gameWrapper = document.createElement("div");
+        _gameWrapper.className = `${styles["game-wrapper"]} game-wrapper`;
+        _gameWrapper.tabIndex = -1;
+        _gameWrapper.style.outline = "none";
+        _gameWrapper.setAttribute("role", "application");
+        _gameWrapper.setAttribute("aria-atomic", "false");
+        _gameWrapper.setAttribute("lang", "pl");
+        _gameWrapper.setAttribute("xml:lang", "pl");
+
+        new ResizeObserver(() => {
+            _gameWrapper.style.setProperty("--app-scale", `${_gameWrapper.clientHeight / 896}`);
+        }).observe(_gameWrapper);
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            _gameWrapper.classList.add(styles["reduce-motion"]);
+        }
+        _container.appendChild(_gameWrapper);
+
+        const version = document.createElement("span");
+        version.className = styles["version-label"];
+        version.textContent = `makieta v${verNum} ツ`;
+        version.ariaHidden = "true";
+        _container.appendChild(version);
+
+        setTimeout(() => {
+            _gameWrapper.focus();
+        }, 100);
+
+        const loader = document.createElement("div");
+        loader.className = styles["loader"];
+        const loaderText = document.createElement("div");
+        loaderText.className = styles["loader-text"];
+        loaderText.textContent = "Ładowanie... 0%";
+        loader.appendChild(loaderText);
+        _gameWrapper.appendChild(loader);
+
+        loadCss('entry.css').then(() => {
+            return AssetLoader.preloadAll((percent) => {
+                loaderText.textContent = `Ładowanie... ${Math.round(percent)}%`;
+            });
+        }).then(() => {
+            return fetch(path("scenario.json"));
+        }).then(res => res.json())
+          .then((sc: Scenario) => {
+              setTimeout(() => {
+                  loader.remove();
+                  _gm = new GameManager(_gameWrapper, state, sc);
+                  resolve();
+              }, 100);
+          })
+          .catch(err => {
+              console.error("[ZPE Game] Błąd podczas ładowania: ", err);
+              resolve();
+          });
     });
-}
-
-export function run(stateData: Record<string, any> | null, isFrozen: boolean): Promise<void> {
-    if (stateData && Object.keys(stateData).length > 0) {
-        log.info("Przywracanie stanu gry...", stateData);
-        state.set(stateData as any);
-    }
-    if (_gm) _gm.start();
-    return Promise.resolve();
-}
-
-export function unload(): Promise<void> {
-    if (_gm) {
-        log.info("Zwalnianie zasobów...");
-        _gm.dispose();
-        _gm = null;
-    }
-    return Promise.resolve();
-}
-
-export function destroy(): Promise<void> {
-    unload();
-    if (_gameWrapper) _gameWrapper.remove();
-    log.success("Aplikacja została zniszczona poprawnie.");
-    return Promise.resolve();
 }

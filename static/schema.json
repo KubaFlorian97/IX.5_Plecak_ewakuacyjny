@@ -34,31 +34,6 @@
                     }
                 }
             }
-        },
-        "rooms": {
-            "type": "array",
-            "item": {
-                "id": {
-                    "type": "string",
-                    "private": true
-                },
-                "items": {
-                    "type": "array",
-                    "item": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "string",
-                                "private": true
-                            },
-                            "enabled": {
-                                "type": "boolean",
-                                "label": "Włączony"
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }

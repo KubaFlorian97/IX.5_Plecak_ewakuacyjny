@@ -1,9 +1,12 @@
-import { translations, Language } from "../lang/translations";
+import { Language, translations } from "../lang/translations";
 
 export class Localization {
     private static _currentLang: Language = 'pl';
+
     static setLanguage(lang: Language) { this._currentLang = lang; }
+
     static getLanguage() { return this._currentLang; }
+
     static t(key: string, replacements?: Record<string, string | number>): string {
         const keys = key.split('.');
         let value: any = translations[this._currentLang];

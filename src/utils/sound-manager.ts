@@ -1,156 +1,357 @@
-import { path } from "@/zpe-port";
-import { _gameWrapper } from "~/app";
-import { Emitter } from "~/nano_core/emitter";
-import { log } from "~/nano_core/log";
+import { path } from "@/zpe-port"
+import { t } from "./localization";
 
-class SoundManager {
-    private _sounds = new Map<string, HTMLAudioElement>();
-    private _isUnlocked = false;
-
-    private _sfxVolume = 1.0;
-    private _musicVolume = 0.2;
+export class SoundManager {
+    // Cache przechowujący dźwięki na podstawie ich pełnego URL
+    private static _sounds: Map<string, HTMLAudioElement> = new Map();
+    private static _isUnlocked: boolean = false;
     
-    public sfxMuted = false;
-    public musicMuted = false;
+    private static _globalMuted: boolean = false;
+    
+    // SFX
+    private static _sfxVolume: number = 1.0;
+    private static _sfxMuted: boolean = false;
+    private static _activeSfx: HTMLAudioElement[] = [];
 
-    public readonly onStateChanged = new Emitter<void>();
+    // Music
+    private static _musicVolume: number = 0.2; 
+    private static _musicMuted: boolean = false;
+    private static _currentMusic: HTMLAudioElement | null = null;
+    private static _pendingMusicSrc: string | null = null;
 
-    private _activeSfx: HTMLAudioElement[] = [];
-    private _currentMusic: HTMLAudioElement | null = null;
-    private _currentVoiceover: HTMLAudioElement | null = null;
+    private static _musicFadeInterval: any = null;
 
-    private _aliases: Record<string, string> = {
-        'drawer': 'audio/drawer.mp3',
-        'collect': 'audio/item_collect.mp3',
-        'drop': 'audio/item_drop.mp3',
+    // Voiceover
+    private static _currentVoiceover: HTMLAudioElement | null = null;
+
+    // System subskrypcji dla UI (np. TopBar, SettingsModal)
+    private static _listeners: (() => void)[] = [];
+
+    // --- ORYGINALNE ALIASY ---
+    private static _aliases: Record<string, string> = {
         'click': 'audio/ui_click.mp3',
-        'theme': 'audio/theme_loop.mp3',
-        'intro': 'audio/intro.mp3',
-        'darkness': 'audio/darkness_theme.mp3',
-        'hardcore': 'audio/hardcore.mp3'
+        'theme_loop': 'audio/theme_loop.mp3'
     };
 
-    public setupAutoplayUnlock() {
-        if (this._isUnlocked) return;
-        const unlock = () => {
-            this._isUnlocked = true;
-            log.success("Audio odblokowane przez interakcję użytkownika.");
-
-            if (this._currentMusic && this._currentMusic.paused && !this.musicMuted) {
-                this._currentMusic.play().catch(e => log.error("Autoplay nadal zablokowane", e));
-            }
-
-            _gameWrapper.removeEventListener('click', unlock);
-            _gameWrapper.removeEventListener('keydown', unlock);
-            _gameWrapper.removeEventListener('touchstart', unlock);
-        };
-
-        _gameWrapper.addEventListener('click', unlock);
-        _gameWrapper.addEventListener('keydown', unlock);
-        _gameWrapper.addEventListener('touchstart', unlock);
+    // --- SUBSKRYPCJE ZDARZEŃ ---
+    public static subscribe(listener: () => void) {
+        this._listeners.push(listener);
     }
 
-    public play(urlOrAlias: string, loop = false): HTMLAudioElement | null {
-        const url = this._aliases[urlOrAlias] || urlOrAlias;
-        const fullUrl = path(url);
-        
+    public static unsubscribe(listener: () => void) {
+        this._listeners = this._listeners.filter(l => l !== listener);
+    }
 
+    private static notifyListeners() {
+        this._listeners.forEach(cb => cb());
+    }
+
+    // --- ODBLOKOWANIE AUDIO ---
+    public static unlockAudio() {
+        // Zabezpieczenie przed blokowaniem autoplay: puszczamy oczekującą muzykę po kliknięciu
+        if (this._pendingMusicSrc) {
+            this.playMusic(this._pendingMusicSrc);
+            this._pendingMusicSrc = null;
+        }
+    }
+
+    // --- PRELOAD DLA ASSETLOADERA ---
+    public static load(src: string): Promise<void> {
+        return new Promise((resolve) => {
+            const audio = new Audio();
+            let isResolved = false;
+
+            const finish = () => {
+                if (isResolved) return;
+                isResolved = true;
+                this._sounds.set(src, audio); // Zapis do cache pod pełnym adresem
+                resolve();
+            };
+
+            audio.addEventListener('canplaythrough', finish, { once: true });
+            audio.addEventListener('error', finish, { once: true });
+            
+            audio.preload = "auto";
+            audio.src = src;
+            audio.load();
+
+            setTimeout(finish, 3000); // 3-sekundowy bezpiecznik
+        });
+    }
+
+    // --- ODTWARZANIE SFX ---
+    public static play(id: string) {
+        if (document.hidden) return;
+        
+        // Odkodowanie aliasu, jeśli istnieje
+        const aliasPath = this._aliases[id] || id;
+        const fullUrl = (window as any).ZPE ? (window as any).ZPE.path(aliasPath) : path(aliasPath);
+        
         let baseAudio = this._sounds.get(fullUrl);
         if (!baseAudio) {
             baseAudio = new Audio(fullUrl);
             this._sounds.set(fullUrl, baseAudio);
         }
-
-        const clone = baseAudio.cloneNode() as HTMLAudioElement;
-        clone.loop = loop;
-        clone.volume = this.sfxMuted ? 0 : this._sfxVolume;
-
-        if (this._isUnlocked) {
-            clone.play().catch(() => {});
+        
+        const audio = baseAudio.cloneNode() as HTMLAudioElement;
+        audio.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        this._activeSfx.push(audio);
+        
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => console.warn("[SoundManager] SFX play blocked", e));
         }
-
-        this._activeSfx.push(clone);
-        clone.addEventListener('ended', () => {
-            this._activeSfx = this._activeSfx.filter(s => s !== clone);
-        });
-        return clone;
+        
+        audio.onended = () => {
+            this._activeSfx = this._activeSfx.filter(a => a !== audio);
+        };
     }
 
-    public playMusic(urlOrAlias: string) {
-        if (this._currentMusic) this._currentMusic.pause();
-        
-        const url = this._aliases[urlOrAlias] || urlOrAlias;
-        this._currentMusic = new Audio(path(url));
+    // --- ODTWARZANIE MUZYKI W TLE ---
+    public static playMusic(alias: string, fadeTimeMs: number = 1000) {
+        const src = this._aliases[alias];
+        if (!src) return;
+
+        // Tutaj pobieramy plik z pamięci cache (zależnie od tego, jak zapisujesz klucze w AssetLoader, 
+        // może tu być potrzebne użycie funkcji path(src))
+        const nextMusic = this._sounds.get(src) || this._sounds.get(path(src));
+        if (!nextMusic) return;
+
+        // Jeśli ten sam utwór już gra, nie robimy nic, żeby go nie zrestartować
+        if (this._currentMusic === nextMusic && !nextMusic.paused) return;
+
+        // Jeśli w trakcie było inne przenikanie, anulujemy je
+        if (this._musicFadeInterval) {
+            clearInterval(this._musicFadeInterval);
+            this._musicFadeInterval = null;
+        }
+
+        const isSameMusic = this._currentMusic === nextMusic;
+        const prevMusic = isSameMusic ? null : this._currentMusic;
+        this._currentMusic = nextMusic;
+
+        // Przygotowujemy nowy utwór (od zera jeśli to nowy utwór)
         this._currentMusic.loop = true;
-        this._currentMusic.volume = this.musicMuted ? 0 : this._musicVolume;
-        
-        if (this._isUnlocked) {
-            this._currentMusic.play().catch(() => {});
+        if (!isSameMusic) {
+            this._currentMusic.volume = 0; 
         }
+        
+        // Jeśli nie jest globalnie wyciszone, odpalamy odtwarzanie
+        if (!this._musicMuted && !this._globalMuted) {
+            if (!document.hidden) {
+                this._currentMusic.play().catch(e => {
+                    console.warn("Błąd autoodtwarzania audio:", e);
+                    this._pendingMusicSrc = alias;
+                });
+            } else {
+                this._pendingMusicSrc = alias;
+            }
+        }
+
+        // Ustalamy docelową głośność i parametry kroku
+        const targetVolume = (this._musicMuted || this._globalMuted) ? 0 : this._musicVolume;
+        const steps = 20; // Rozdzielczość animacji
+        const stepTime = fadeTimeMs / steps;
+        
+        let currentStep = 0;
+        let startPrevVolume = prevMusic ? prevMusic.volume : 0;
+
+        // Główna pętla przenikania (Crossfade)
+        this._musicFadeInterval = setInterval(() => {
+            currentStep++;
+            const progress = currentStep / steps;
+
+            // Ściszanie starego utworu
+            if (prevMusic) {
+                prevMusic.volume = Math.max(0, startPrevVolume * (1 - progress));
+            }
+
+            // Pogłaśnianie nowego utworu
+            if (this._currentMusic) {
+                this._currentMusic.volume = targetVolume * progress;
+            }
+
+            // Zakończenie przenikania
+            if (currentStep >= steps) {
+                clearInterval(this._musicFadeInterval);
+                this._musicFadeInterval = null;
+
+                if (prevMusic) {
+                    prevMusic.pause();
+                    prevMusic.currentTime = 0; // Przewijamy stary utwór do początku
+                }
+                
+                if (this._currentMusic) {
+                    this._currentMusic.volume = targetVolume; // Wyrównanie dla pewności
+                }
+            }
+        }, stepTime);
     }
 
-    public stopMusic() {
+    // --- USTAWIENIA GŁOŚNOŚCI I WYCISZENIA ---
+    public static getGlobalMute(): boolean {
+        return this._globalMuted;
+    }
+
+    public static setGlobalMute(mute: boolean) {
+        this._globalMuted = mute;
+        this._musicMuted = mute;
+        this._sfxMuted = mute;
+
+        if (this._currentMusic) {
+            this._currentMusic.volume = this._musicMuted ? 0 : this._musicVolume;
+        }
+        
+        this._activeSfx.forEach(audio => {
+            audio.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        });
+        
+        if (this._currentVoiceover) {
+            this._currentVoiceover.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        }
+
+        this.notifyListeners();
+
+        const audioMute = mute ? 'wyłączone' : 'włączone';
+    }
+
+    public static setMusicVolume(volume: number) {
+        this._musicVolume = Math.max(0, Math.min(1, volume));
+        
+        if (this._globalMuted) this._globalMuted = false;
+        this._musicMuted = false;
+
+        if (this._currentMusic) {
+            this._currentMusic.volume = this._musicMuted ? 0 : this._musicVolume;
+        }
+        this.notifyListeners();
+    }
+
+    public static setSfxVolume(volume: number) {
+        this._sfxVolume = Math.max(0, Math.min(1, volume));
+        
+        if (this._globalMuted) this._globalMuted = false;
+        this._sfxMuted = false;
+
+        this._activeSfx.forEach(audio => {
+            audio.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        });
+        if (this._currentVoiceover) {
+            this._currentVoiceover.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        }
+        this.notifyListeners();
+    }
+
+    public static setMusicMute(mute: boolean) {
+        if (this._musicFadeInterval) clearInterval(this._musicFadeInterval);
+        
+        this._musicMuted = mute;
+        if (!mute && this._globalMuted) this._globalMuted = false;
+        
+        if (this._currentMusic) {
+            this._currentMusic.volume = this._musicMuted ? 0 : this._musicVolume;
+        }
+        this.notifyListeners();
+        const musicLabel = this._musicMuted ? 'włączone' : 'wyłączone';
+    }
+
+    public static setSfxMute(mute: boolean) {
+        this._sfxMuted = mute;
+        if (!mute && this._globalMuted) this._globalMuted = false;
+
+        this._activeSfx.forEach(audio => {
+            audio.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        });
+        if (this._currentVoiceover) {
+            this._currentVoiceover.volume = this._sfxMuted ? 0 : this._sfxVolume;
+        }
+        this.notifyListeners();
+        const sfxLabel = this._sfxMuted ? 'włączone' : 'wyłączone';
+    }
+
+    public static getMusicVolume(): number { return this._musicVolume; }
+    public static getSfxVolume(): number { return this._sfxVolume; }
+    public static getMusicMute(): boolean { return this._musicMuted; }
+    public static getSfxMute(): boolean { return this._sfxMuted; }
+
+    public static stopAll() {
         if (this._currentMusic) {
             this._currentMusic.pause();
             this._currentMusic = null;
         }
+        this._activeSfx.forEach(a => a.pause());
+        this._activeSfx = [];
     }
 
-    public playVoiceover(url: string) {
-        this.stopVoiceover();
-        this._currentVoiceover = new Audio(path(url));
-        this._currentVoiceover.volume = this.sfxMuted ? 0 : this._sfxVolume;
-
-        if (this._isUnlocked) {
-            this._currentVoiceover.play().catch(() => {});
+    public static pauseAll() {
+        if (this._currentMusic && !this._currentMusic.paused) {
+            this._currentMusic.pause();
         }
-    }
-
-    public stopVoiceover() {
-        if (this._currentVoiceover) {
-            this._currentVoiceover.pause();
-            this._currentVoiceover = null;
-        }
-    }
-
-    public pauseResumeVoiceover() {
-        if (this._currentVoiceover && this._currentVoiceover.paused) {
-            this._currentVoiceover.play();
-        } else if (this._currentVoiceover && !this._currentVoiceover.paused) {
+        this._activeSfx.forEach(a => {
+            if (!a.paused) a.pause();
+        });
+        if (this._currentVoiceover && !this._currentVoiceover.paused) {
             this._currentVoiceover.pause();
         }
     }
 
-    public get isVoiceoverPlaying() { return this._currentVoiceover && !this._currentVoiceover.paused; }
-
-    public toggleSfxMute() {
-        this.sfxMuted = !this.sfxMuted;
-        const vol = this.sfxMuted ? 0 : this._sfxVolume;
-        this._activeSfx.forEach(s => s.volume = vol);
-        if (this._currentVoiceover) this._currentVoiceover.volume = vol;
-        this.onStateChanged.emmit();
+    public static resumeAll() {
+        if (!this._globalMuted) {
+            if (this._currentMusic && !this._musicMuted && this._currentMusic.paused) {
+                this._currentMusic.play().catch(e => console.warn(e));
+            }
+            if (!this._sfxMuted) {
+                this._activeSfx.forEach(a => {
+                    if (a.paused && !a.ended) a.play().catch(e => console.warn(e));
+                });
+                if (this._currentVoiceover && this._currentVoiceover.paused && !this._currentVoiceover.ended) {
+                    this._currentVoiceover.play().catch(e => console.warn(e));
+                }
+            }
+        }
     }
 
-    public toggleMusicMute() {
-        this.musicMuted = !this.musicMuted;
-        if (this._currentMusic) this._currentMusic.volume = this.musicMuted ? 0 : this._musicVolume;
-        this.onStateChanged.emmit();
-    }
+    public static setupAutoplayUnlock() {
+        if (this._isUnlocked) return;
 
-    public get sfxVolume() { return this._sfxVolume; }
-    public get musicVolume() { return this._musicVolume; }
+        const unlock = () => {
+            if (this._isUnlocked) return;
 
-    public setSfxVolume(vol: number) {
-        this._sfxVolume = vol;
-        const actualVol = this.sfxMuted ? 0 : vol;
-        this._activeSfx.forEach(a => a.volume = actualVol);
-        if (this._currentVoiceover) this._currentVoiceover.volume = actualVol;
-    }
+            if (this._pendingMusicSrc) {
+                this.playMusic(this._pendingMusicSrc);
+                this._pendingMusicSrc = null;
+            }
 
-    public setMusicVolume(vol: number) {
-        this._musicVolume = vol;
-        if (this._currentMusic) this._currentMusic.volume = this.musicMuted ? 0 : vol;
+            if (this._currentMusic && this._currentMusic.paused && !this._musicMuted && !this._globalMuted) {
+                const playPromise = this._currentMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        this._isUnlocked = true;
+                        cleanup();
+                    }).catch(e => console.warn("Audio nadal zablokowane:", e));
+                }
+            } else if (!this._currentMusic || (!this._currentMusic.paused && !this._musicMuted && !this._globalMuted)) {
+                this._isUnlocked = true;
+                cleanup();
+            }
+        };
+
+        const cleanup = () => {
+            document.removeEventListener('click', unlock);
+            document.removeEventListener('keydown', unlock);
+            document.removeEventListener('touchstart', unlock);
+        };
+
+        document.addEventListener('click', unlock);
+        document.addEventListener('keydown', unlock);
+        document.addEventListener('touchstart', unlock);
     }
 }
 
-export const soundManager = new SoundManager();
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        SoundManager.pauseAll();
+    } else {
+        SoundManager.resumeAll();
+    }
+});
