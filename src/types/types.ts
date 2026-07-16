@@ -86,3 +86,14 @@ export interface ItemData {
 }
 
 export type ItemType = 'collectible' | 'container' | 'wardrobe' | 'movable' | 'static';
+
+export interface EngineSetting {
+    id: string;
+    enabled: boolean;
+}
+
+export interface TeacherSettings {
+    difficulties: EngineSetting[];
+    threats: EngineSetting[];
+    rooms: { id: string, items: EngineSetting[] }[];
+}
